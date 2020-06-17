@@ -72,4 +72,6 @@ modules/
 *.png
 *.bmp
 *.png
+*.ico
 *.db
+*.ddp
