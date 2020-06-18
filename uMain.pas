@@ -95,49 +95,15 @@ type
     bDelAsset: TPNGButton;
     Panel2: TPanel;
     lbList: TListBox;
-    bMoveDown: TPNGButton;
-    bMoveUp: TPNGButton;
-    bDeleteAsset: TPNGButton;
     Label36: TLabel;
     cbPicFmt2: TComboBox;
     bImpPicTile: TPNGButton;
-    PanLayer: TPanel;
-    Label37: TLabel;
-    Label38: TLabel;
-    Label50: TLabel;
-    Label51: TLabel;
-    Label52: TLabel;
-    eName4: TEdit;
-    eAddress4: TEdit;
-    eVidAddr4: TEdit;
-    cbEnabled4: TCheckBox;
-    Label39: TLabel;
-    cbVidMode4: TComboBox;
     bAddLayer: TPNGButton;
-    Label40: TLabel;
-    cbTileH4: TComboBox;
-    Label41: TLabel;
-    cbTileW4: TComboBox;
-    Label43: TLabel;
-    cbMapH4: TComboBox;
-    Label46: TLabel;
-    Label47: TLabel;
-    Label48: TLabel;
-    Label49: TLabel;
-    cbMapW4: TComboBox;
-    Label57: TLabel;
-    Label53: TLabel;
-    eTileBase4: TEdit;
-    Label54: TLabel;
-    Label55: TLabel;
-    eMapBase4: TEdit;
-    Label56: TLabel;
-    Label58: TLabel;
-    seHScroll4: TSpinEdit;
-    Label59: TLabel;
-    seVScroll4: TSpinEdit;
-    Label60: TLabel;
-    Label61: TLabel;
+    panEdits: TPanel;
+    Panel3: TPanel;
+    bMoveDown: TPNGButton;
+    bMoveUp: TPNGButton;
+    bDeleteAsset: TPNGButton;
     bCopyAsset: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -164,8 +130,10 @@ type
     procedure bAddLayerClick(Sender: TObject);
     procedure LayerChange(Sender: TObject);
     procedure bCopyAssetClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     procedure EmptyDoc;
+    procedure ShowPanel(Ind: integer);
   public
     { Public declarations }
   end;
@@ -176,15 +144,12 @@ var
 implementation
 {$R *.dfm}
 
-uses uCommon;
+uses uCommon, uLayer;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  panSprite.Left  := 690;
-  panPicture.Left := 690;
-  panPalette.Left := 690;
-  PanLayer.Left   := 690;
+//
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
@@ -265,7 +230,6 @@ procedure TfmMain.lbListClick(Sender: TObject);
       Spr: pSprite;
       Pic: pPicture;
       Pal: pPalette;
-      Lay: pLayer;
 begin
   ind := lbList.ItemIndex;
   if ind < 0 then exit;
@@ -286,10 +250,7 @@ begin
     cbHFlip.Checked  := Spr.hFlip = 1;
     cbVFlip.Checked  := Spr.vFlip = 1;
 
-    panPalette.Visible := false;
-    panPicture.Visible := false;
-    panSprite.Visible  := true;
-    PanLayer.Visible   := false;
+    ShowPanel(1);
     HexDump(Memo.Lines, Spr.Data, Spr.Addr);
    end;
 
@@ -305,10 +266,7 @@ begin
     cbPicFmt2.ItemIndex := Pic.Mode;
     eVidAddr2.Text      := IntToHex(Pic.vAddr, 5);
 
-    panPalette.Visible := false;
-    panPicture.Visible := true;
-    panSprite.Visible  := false;
-    PanLayer.Visible   := false;
+    ShowPanel(2);
     HexDump(Memo.Lines, Pic.Data, Pic.Addr);
    end;
 
@@ -319,34 +277,20 @@ begin
     seCount3.Value   := Pal.Count;
     eVidAddr3.Text   := IntToHex(Pal.vAddr, 5);
 
-    panPalette.Visible := true;
-    panPicture.Visible := false;
-    panSprite.Visible  := false;
-    PanLayer.Visible   := false;
+    ShowPanel(3);
     HexDump(Memo.Lines, Pal.Data, Pal.Addr);
    end;
 
   4: begin
-    Lay := pLayer(lbList.Items.Objects[ind]);
-    eName4.Text          := Lay.Name;
-    eAddress4.Text       := IntToHex(Lay.Addr, 4);
-    cbVidMode4.ItemIndex := Lay.Mode;
-    cbTileH4.ItemIndex   := Lay.TileH;
-    cbTileW4.ItemIndex   := Lay.TileW;
-    cbMapH4.ItemIndex    := Lay.MapH;
-    cbMapW4.ItemIndex    := Lay.MapW;
-    eTileBase4.Text      := IntToHex(Lay.TileBase, 5);
-    eMapBase4.Text       := IntToHex(Lay.MapBase, 5);
-    seHScroll4.Value     := Lay.ScrollH;
-    seVScroll4.Value     := Lay.ScrollV;
-    eVidAddr4.Text       := IntToHex(Lay.vAddr, 5);
-    cbEnabled4.Checked   := Lay.Enable = 1;
+    fmLayer.SetPointer(lbList.Items.Objects[ind]);
+    ShowPanel(0);
+    {Lay := pLayer(lbList.Items.Objects[ind]);
 
     panPalette.Visible := false;
     panPicture.Visible := false;
     panSprite.Visible  := false;
     PanLayer.Visible   := true;
-    HexDump(Memo.Lines, Lay.Data, Lay.Addr);
+    HexDump(Memo.Lines, Lay.Data, Lay.Addr);  }
    end;
 
   end;
@@ -403,27 +347,8 @@ end;
 procedure TfmMain.LayerChange(Sender: TObject);
   var Lay: pLayer;
 begin
-  Lay := pLayer(lbList.Items.Objects[lbList.ItemIndex]);
-  case TComponent(Sender).Tag of
-     1: begin
-        Lay.Name := eName4.Text;
-        lbList.Items[lbList.ItemIndex] := Lay.Name;
-      end;
-     2: Lay.Addr := StrToInt('$' + eAddress4.Text);
-     3: Lay.Mode := cbVidMode4.ItemIndex;
-     4: Lay.TileH := cbTileH4.ItemIndex;
-     5: Lay.TileW := cbTileW4.ItemIndex;
-     6: Lay.MapH := cbMapH4.ItemIndex;
-     7: Lay.MapW := cbMapW4.ItemIndex;
-     8: Lay.TileBase := StrToInt('$' + eTileBase4.Text);
-     9: Lay.MapBase  := StrToInt('$' + eMapBase4.Text);
-    10: Lay.ScrollH  := seHScroll4.Value;
-    11: Lay.ScrollV  := seVScroll4.Value;
-    12: Lay.vAddr    := StrToInt('$' + eVidAddr4.Text);
-    13: Lay.Enable   := ord(cbEnabled4.Checked);
-  end;
-  PrepareLayerData(Lay);
-  HexDump(Memo.Lines, Lay.Data, Lay.Addr);
+  {Lay := pLayer(lbList.Items.Objects[lbList.ItemIndex]);
+  HexDump(Memo.Lines, Lay.Data, Lay.Addr); }
 end;
 
 
@@ -757,6 +682,19 @@ end;
 procedure TfmMain.bCopyAssetClick(Sender: TObject);
 begin
   HexDumpInClipBoard(pAsset(lbList.Items.Objects[lbList.ItemIndex]).Data);
+end;
+
+procedure TfmMain.ShowPanel(Ind: integer);
+  var i: integer;
+begin
+  for i := 0 to panEdits.ControlCount - 1 do
+    panEdits.Controls[i].Visible := i = Ind;
+end;
+
+
+procedure TfmMain.FormShow(Sender: TObject);
+begin
+  fmLayer.Setup;
 end;
 
 end.
