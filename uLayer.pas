@@ -46,11 +46,11 @@ type
     cbEnabled4: TCheckBox;
     procedure ControlChange(Sender: TObject);
   private
-    { Private declarations }
+
   public
     Lay: pLayer;
-    procedure SetPointer(Ptr: pointer);
     procedure Setup;
+    procedure SetPointer(Ptr: pointer);
   end;
 
 var
@@ -64,8 +64,6 @@ procedure TfmLayer.Setup;
 begin
   BorderStyle := bsNone;
   Parent := fmMain.panEdits;
-  Top := 0;
-  Left := 0;
   Align := alClient;
 end;
 
@@ -87,6 +85,9 @@ begin
   seVScroll4.Value     := Lay.ScrollV;
   eVidAddr4.Text       := IntToHex(Lay.vAddr, 5);
   cbEnabled4.Checked   := Lay.Enable = 1;
+
+  HexDump(fmMain.Memo.Lines, Lay.Data, Lay.Addr);
+  fmMain.ShowPanel(3);
 end;
 
 
@@ -112,6 +113,7 @@ begin
   end;
 
   PrepareLayerData(Lay);
+  HexDump(fmMain.Memo.Lines, Lay.Data, Lay.Addr);
 end;
 
 end.

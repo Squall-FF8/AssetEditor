@@ -11,72 +11,8 @@ type
     Panel1: TPanel;
     bAddSprite: TPNGButton;
     XPManifest1: TXPManifest;
-    panSprite: TPanel;
-    Label1: TLabel;
-    eName: TEdit;
-    Label2: TLabel;
-    eAddress: TEdit;
-    Label3: TLabel;
-    seX: TSpinEdit;
-    Label4: TLabel;
-    seY: TSpinEdit;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    cbW: TComboBox;
-    Label9: TLabel;
-    cbH: TComboBox;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label12: TLabel;
-    eVidAddr: TEdit;
-    Label13: TLabel;
-    Label14: TLabel;
-    cbMode: TComboBox;
-    Label15: TLabel;
-    cbZ: TComboBox;
-    Label16: TLabel;
-    sePal: TSpinEdit;
-    Label17: TLabel;
-    cbHFlip: TCheckBox;
-    cbVFlip: TCheckBox;
     Memo: TMemo;
-    panPicture: TPanel;
-    Label18: TLabel;
-    Label19: TLabel;
-    Label20: TLabel;
-    Label21: TLabel;
-    Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
-    Label25: TLabel;
-    Label26: TLabel;
-    Label27: TLabel;
-    Label28: TLabel;
-    Label31: TLabel;
-    eName2: TEdit;
-    eAddress2: TEdit;
-    seX2: TSpinEdit;
-    seY2: TSpinEdit;
-    cbBpp2: TComboBox;
-    seW2: TSpinEdit;
-    seH2: TSpinEdit;
     bAddPic: TPNGButton;
-    Label29: TLabel;
-    eVidAddr2: TEdit;
-    Label30: TLabel;
-    panPalette: TPanel;
-    Label32: TLabel;
-    Label33: TLabel;
-    Label34: TLabel;
-    Label42: TLabel;
-    Label44: TLabel;
-    Label45: TLabel;
-    eName3: TEdit;
-    eAddress3: TEdit;
-    seCount3: TSpinEdit;
-    eVidAddr3: TEdit;
     bAddPalette: TPNGButton;
     bImpSprite: TPNGButton;
     dOpenPicture: TOpenPictureDialog;
@@ -95,8 +31,6 @@ type
     bDelAsset: TPNGButton;
     Panel2: TPanel;
     lbList: TListBox;
-    Label36: TLabel;
-    cbPicFmt2: TComboBox;
     bImpPicTile: TPNGButton;
     bAddLayer: TPNGButton;
     panEdits: TPanel;
@@ -108,12 +42,9 @@ type
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
-    procedure SpriteChange(Sender: TObject);
     procedure bGenerateSourceClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bAddPicClick(Sender: TObject);
-    procedure PictureChange(Sender: TObject);
-    procedure PaletteChange(Sender: TObject);
     procedure bAddPaletteClick(Sender: TObject);
     procedure bImpSpriteClick(Sender: TObject);
     procedure bSaveFileClick(Sender: TObject);
@@ -128,14 +59,12 @@ type
     procedure bMoveDownClick(Sender: TObject);
     procedure bImpPicTileClick(Sender: TObject);
     procedure bAddLayerClick(Sender: TObject);
-    procedure LayerChange(Sender: TObject);
     procedure bCopyAssetClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     procedure EmptyDoc;
-    procedure ShowPanel(Ind: integer);
   public
-    { Public declarations }
+    procedure ShowPanel(Ind: integer);
   end;
 
 var
@@ -144,7 +73,7 @@ var
 implementation
 {$R *.dfm}
 
-uses uCommon, uLayer;
+uses uCommon, uSprite, uPicture, uPalette, uLayer;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -227,143 +156,15 @@ end;
 
 procedure TfmMain.lbListClick(Sender: TObject);
   var ind: integer;
-      Spr: pSprite;
-      Pic: pPicture;
-      Pal: pPalette;
 begin
   ind := lbList.ItemIndex;
   if ind < 0 then exit;
 
   case pAsset(lbList.Items.Objects[ind]).Kind of
-  1: begin
-    Spr := pSprite(lbList.Items.Objects[ind]);
-    eName.Text    := Spr.Name;
-    eAddress.Text := IntToHex(Spr.Addr, 4);
-    seX.Value     := Spr.X;
-    seY.Value     := Spr.Y;
-    cbW.ItemIndex := Spr.W;
-    cbH.ItemIndex := Spr.H;
-    cbMode.ItemIndex := Spr.BPP;
-    cbZ.ItemIndex    := Spr.Z;
-    eVidAddr.Text    := IntToHex(Spr.vAddr, 5);
-    sePal.Value      := Spr.Pal;
-    cbHFlip.Checked  := Spr.hFlip = 1;
-    cbVFlip.Checked  := Spr.vFlip = 1;
-
-    ShowPanel(1);
-    HexDump(Memo.Lines, Spr.Data, Spr.Addr);
-   end;
-
-  2: begin
-    Pic := pPicture(lbList.Items.Objects[ind]);
-    eName2.Text         := Pic.Name;
-    eAddress2.Text      := IntToHex(Pic.Addr, 4);
-    seX2.Value          := Pic.X;
-    seY2.Value          := Pic.Y;
-    seW2.Value          := Pic.W;
-    seH2.Value          := Pic.H;
-    cbBpp2.ItemIndex    := Pic.BPP;
-    cbPicFmt2.ItemIndex := Pic.Mode;
-    eVidAddr2.Text      := IntToHex(Pic.vAddr, 5);
-
-    ShowPanel(2);
-    HexDump(Memo.Lines, Pic.Data, Pic.Addr);
-   end;
-
-  3: begin
-    Pal := pPalette(lbList.Items.Objects[ind]);
-    eName3.Text      := Pal.Name;
-    eAddress3.Text   := IntToHex(Pal.Addr, 4);
-    seCount3.Value   := Pal.Count;
-    eVidAddr3.Text   := IntToHex(Pal.vAddr, 5);
-
-    ShowPanel(3);
-    HexDump(Memo.Lines, Pal.Data, Pal.Addr);
-   end;
-
-  4: begin
-    fmLayer.SetPointer(lbList.Items.Objects[ind]);
-    ShowPanel(0);
-    {Lay := pLayer(lbList.Items.Objects[ind]);
-
-    panPalette.Visible := false;
-    panPicture.Visible := false;
-    panSprite.Visible  := false;
-    PanLayer.Visible   := true;
-    HexDump(Memo.Lines, Lay.Data, Lay.Addr);  }
-   end;
-
-  end;
-end;
-
-
-procedure TfmMain.SpriteChange(Sender: TObject);
-  var Spr: pSprite;
-begin
-  Spr := pSprite(lbList.Items.Objects[lbList.ItemIndex]);
-  case TComponent(Sender).Tag of
-     1: begin
-        Spr.Name := eName.Text;
-        lbList.Items[lbList.ItemIndex] := Spr.Name;
-      end;
-     2: Spr.Addr := StrToInt('$' + eAddress.Text);
-     3: Spr.X := seX.Value;
-     4: Spr.Y := seY.Value;
-     5: Spr.W := cbW.ItemIndex;
-     6: Spr.H := cbH.ItemIndex;
-     7: Spr.BPP := cbMode.ItemIndex;
-     8: Spr.vAddr := StrToInt('$' + eVidAddr.Text);
-     9: Spr.Z := cbZ.ItemIndex;
-    10: Spr.Pal := sePal.Value;
-    11: Spr.hFlip := ord(cbHFlip.Checked);
-    12: Spr.vFlip := ord(cbVFlip.Checked);
-  end;
-  PrepareSpriteData(Spr);
-  HexDump(Memo.Lines, Spr.Data, Spr.Addr);
-end;
-
-
-procedure TfmMain.PictureChange(Sender: TObject);
-  var Pic: pPicture;
-begin
-  Pic := pPicture(lbList.Items.Objects[lbList.ItemIndex]);
-  case TComponent(Sender).Tag of
-     1: begin
-        Pic.Name := eName2.Text;
-        lbList.Items[lbList.ItemIndex] := Pic.Name;
-      end;
-     2: Pic.Addr  := StrToInt('$' + eAddress2.Text);
-     3: Pic.X     := seX2.Value;
-     4: Pic.Y     := seY2.Value;
-     5: Pic.W     := seW2.Value;
-     6: Pic.H     := seH2.Value;
-     7: Pic.BPP   := cbBpp2.ItemIndex;
-     8: Pic.Mode  := cbPicFmt2.ItemIndex;
-     9: Pic.vAddr := StrToInt('$' + eVidAddr2.Text);
-  end;
-end;
-
-
-procedure TfmMain.LayerChange(Sender: TObject);
-  var Lay: pLayer;
-begin
-  {Lay := pLayer(lbList.Items.Objects[lbList.ItemIndex]);
-  HexDump(Memo.Lines, Lay.Data, Lay.Addr); }
-end;
-
-
-procedure TfmMain.PaletteChange(Sender: TObject);
-  var Pal: pPalette;
-begin
-  Pal := pPalette(lbList.Items.Objects[lbList.ItemIndex]);
-  case TComponent(Sender).Tag of
-     1: begin
-        Pal.Name := eName3.Text;
-        lbList.Items[lbList.ItemIndex] := Pal.Name;
-      end;
-     2: Pal.Addr  := StrToInt('$' + eAddress3.Text);
-     3: Pal.Count := seCount3.Value;
-     4: Pal.vAddr := StrToInt('$' + eVidAddr3.Text);
+    1: fmSprite.SetPointer(lbList.Items.Objects[ind]);
+    2: fmPicture.SetPointer(lbList.Items.Objects[ind]);
+    3: fmPalette.SetPointer(lbList.Items.Objects[ind]);
+    4: fmLayer.SetPointer(lbList.Items.Objects[ind]);
   end;
 end;
 
@@ -694,6 +495,10 @@ end;
 
 procedure TfmMain.FormShow(Sender: TObject);
 begin
+  // Order is important!
+  fmSprite.Setup;
+  fmPicture.Setup;
+  fmPalette.Setup;
   fmLayer.Setup;
 end;
 
