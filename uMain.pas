@@ -11,7 +11,6 @@ type
     Panel1: TPanel;
     bAddSprite: TPNGButton;
     XPManifest1: TXPManifest;
-    Memo: TMemo;
     bAddPic: TPNGButton;
     bAddPalette: TPNGButton;
     bImpSprite: TPNGButton;
@@ -33,12 +32,18 @@ type
     lbList: TListBox;
     bImpPicTile: TPNGButton;
     bAddLayer: TPNGButton;
-    panEdits: TPanel;
     Panel3: TPanel;
     bMoveDown: TPNGButton;
     bMoveUp: TPNGButton;
     bDeleteAsset: TPNGButton;
     bCopyAsset: TPNGButton;
+    Panel4: TPanel;
+    panEdits: TPanel;
+    Panel5: TPanel;
+    Memo: TMemo;
+    Splitter1: TSplitter;
+    ScrollBox1: TScrollBox;
+    Image: TImage;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);

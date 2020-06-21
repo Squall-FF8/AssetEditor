@@ -4,6 +4,8 @@ interface
 uses Windows, Classes, Graphics;
 
 const
+  cTransCol = clBtnFace;
+
   atSprite  = 1;
   atPicture = 2;
   atPalette = 3;
