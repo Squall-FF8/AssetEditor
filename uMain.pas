@@ -44,6 +44,7 @@ type
     Splitter1: TSplitter;
     ScrollBox1: TScrollBox;
     Image: TImage;
+    bImpPicTile16: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -66,6 +67,7 @@ type
     procedure bAddLayerClick(Sender: TObject);
     procedure bCopyAssetClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure bImpPicTile16Click(Sender: TObject);
   private
     procedure EmptyDoc;
   public
@@ -222,6 +224,10 @@ begin
   bmp.LoadFromFile(dOpenPicture.FileName);
   fn := ExtractFileName(dOpenPicture.FileName);
   Delete(fn, Length(fn) - 3, 4);
+  if (bmp.PixelFormat <> pf8bit) and (bmp.PixelFormat <> pf4bit) then begin
+    ShowMessage('Unsupported pixel format. Please use only 4bpp or 8 bpp');
+    exit;
+  end;
 
   New(Spr);
   FillChar(Spr^, Sizeof(Spr^), 0);
@@ -241,11 +247,12 @@ begin
   Pic.Kind := atPicture;
   Pic.W    := bmp.Width;
   Pic.H    := bmp.Height;
-  Pic.BPP  := GetPicBpp(bmp.PixelFormat);
-  Pic.Mode := pmLinear;
-  SetLength(Pic.Data, (Pic.W * Pic.H * IndToBpp(Pic.BPP)) shr 3);
+  //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
+  if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
+  if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
+  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
   lbList.AddItem(Pic.Name, tObject(Pic));
-  n := (Pic.W * IndToBpp(Pic.BPP)) shr 3;
+  n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
   for i := 0 to Pic.H - 1 do
     Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
 
@@ -254,7 +261,7 @@ begin
   Pal.Name  := fn + '_Pal';
   Pal.Kind  := atPalette;
   Pal.vAddr := $F1000;
-  Pal.Count := 1 shl (1 shl Pic.BPP);
+  Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
   SetLength(Pal.Data, 2 * Pal.Count);
   ExtarctPal(bmp, Pal.Data);
   lbList.AddItem(Pal.Name, tObject(Pal));
@@ -282,11 +289,12 @@ begin
   Pic.Kind := atPicture;
   Pic.W    := bmp.Width;
   Pic.H    := bmp.Height;
-  Pic.BPP  := GetPicBpp(bmp.PixelFormat);
-  Pic.Mode := pmLinear;
-  SetLength(Pic.Data, (Pic.W * Pic.H * IndToBpp(Pic.BPP)) shr 3);
+  //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
+  if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
+  if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
+  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
   lbList.AddItem(Pic.Name, tObject(Pic));
-  n := (Pic.W * IndToBpp(Pic.BPP)) shr 3;
+  n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
   for i := 0 to Pic.H - 1 do
     Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
 end;
@@ -472,10 +480,10 @@ begin
   Pic.Kind := atPicture;
   Pic.W    := bmp.Width;
   Pic.H    := bmp.Height;
-  Pic.BPP  := GetPicBpp(bmp.PixelFormat);
-  Pic.Mode := pmTiles;
+  //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
+  Pic.Mode := 2;
 
-  SetLength(Pic.Data, (Pic.W * Pic.H * IndToBpp(Pic.BPP)) shr 3);
+  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
   lbList.AddItem(Pic.Name, tObject(Pic));
 
   Import4bpTile(bmp, Pic);
@@ -505,6 +513,33 @@ begin
   fmPicture.Setup;
   fmPalette.Setup;
   fmLayer.Setup;
+end;
+
+
+procedure TfmMain.bImpPicTile16Click(Sender: TObject);
+  var fn: string;
+      bmp: tBitmap;
+      Pic: pPicture;
+begin
+  if not dOpenPicture.Execute then exit;
+
+  bmp := tBitmap.Create;
+  bmp.LoadFromFile(dOpenPicture.FileName);
+  fn := ExtractFileName(dOpenPicture.FileName);
+  Delete(fn, Length(fn) - 3, 4);
+
+  New(Pic);
+  FillChar(Pic^, Sizeof(Pic^), 0);
+  Pic.Name := fn + '_Pic';
+  Pic.Kind := atPicture;
+  Pic.W    := bmp.Width;
+  Pic.H    := bmp.Height;
+  Pic.Mode := 3;
+
+  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
+  lbList.AddItem(Pic.Name, tObject(Pic));
+
+  Import4bpTile16(bmp, Pic);
 end;
 
 end.

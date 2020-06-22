@@ -11,16 +11,9 @@ object fmPicture: TfmPicture
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label36: TLabel
-    Left = 16
-    Top = 208
-    Width = 73
-    Height = 13
-    AutoSize = False
-    Caption = 'Picture Format:'
-  end
   object Label31: TLabel
     Left = 16
     Top = 184
@@ -169,6 +162,14 @@ object fmPicture: TfmPicture
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label1: TLabel
+    Left = 16
+    Top = 267
+    Width = 73
+    Height = 13
+    AutoSize = False
+    Caption = 'Link:'
+  end
   object seY2: TSpinEdit
     Tag = 4
     Left = 88
@@ -245,38 +246,26 @@ object fmPicture: TfmPicture
     TabOrder = 6
     OnChange = ControlChange
   end
-  object cbPicFmt2: TComboBox
+  object cbPixFmt: TComboBox
     Tag = 8
     Left = 88
-    Top = 205
-    Width = 65
-    Height = 21
-    Style = csDropDownList
-    ItemHeight = 13
-    ItemIndex = 0
-    TabOrder = 7
-    Text = 'Liniear'
-    OnChange = ControlChange
-    Items.Strings = (
-      'Liniear'
-      'Tiles')
-  end
-  object cbBpp2: TComboBox
-    Tag = 7
-    Left = 88
     Top = 181
-    Width = 65
+    Width = 145
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    ItemIndex = 0
-    TabOrder = 8
-    Text = '1 bpp'
+    TabOrder = 7
     OnChange = ControlChange
-    Items.Strings = (
-      '1 bpp'
-      '2 bpp'
-      '4 bpp'
-      '8 bpp')
+  end
+  object cbPal: TComboBox
+    Tag = 10
+    Left = 88
+    Top = 264
+    Width = 145
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 8
+    OnChange = ControlChange
+    OnDropDown = cbPalDropDown
   end
 end

@@ -12,8 +12,8 @@ const
   atLayer   = 4;
 
   // Picture Modes
-  pmLinear = 0;
-  pmTiles  = 1;
+  //pmLinear = 0;
+  //pmTiles  = 1;
 
 
 type
@@ -60,7 +60,7 @@ type
 
     X, Y:  integer;
     W, H:  integer;
-    BPP:   byte;  // 1, 2, 4, 8
+    //BPP:   byte;  // 1, 2, 4, 8
     Mode:  byte;  // Linear = 0; Tile = 1;
   end;
   pPicture = ^tPicture;
@@ -105,6 +105,27 @@ const
     (SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer));
 
 
+type
+  tTemplate = record
+    Name: string[20];
+    BPP,
+    tW,
+    tH: byte;
+  end;
+  pTemplate = ^tTemplate;
+
+const
+  // Tile Format constants
+  cTmplNum = 3;
+  cTemplate: array[0 .. cTmplNum] of tTemplate = (
+    (Name: '8bpp Linear';        BPP: 8;  tW:1;  tH:1),
+    (Name: '4bpp Linear';        BPP: 4;  tW:1;  tH:1),
+    (Name: '4bpp Tiled (8x8)';   BPP: 4;  tW:8;  tH:8),
+    (Name: '4bpp Tiled (16x16)'; BPP: 4;  tW:16; tH:16)
+  );
+
+
+
 procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0);
 procedure HexDumpInClipBoard(const Data: tData);
 
@@ -117,9 +138,12 @@ procedure ExtarctPal(bmp: tBitmap; var Data: tData);
 function GetSprMetric(Metric: integer): byte;
 function GetPicBpp(pf: tPixelFormat): byte;
 function IndToBpp(Ind: byte): byte;
+function ModeToFmt(Mode: byte): TPixelFormat;
+function ModeToCols(Mode: byte): integer;
 
 // Imports
 procedure Import4bpTile(const bmp: tBitmap; Pic: pPicture);
+procedure Import4bpTile16(const bmp: tBitmap; Pic: pPicture);
 
 
 implementation
@@ -218,6 +242,27 @@ begin
   Result := 1 shl Ind;
 end;
 
+function ModeToFmt(Mode: byte): TPixelFormat;
+begin
+  case Mode of
+       0: Result := pf8bit;
+    1..3: Result := pf4bit;
+    else
+      ShowMessage('Unsupported mode for Pixel Format: ' + IntToStr(Mode));
+  end;
+end;
+
+
+function ModeToCols(Mode: byte): integer;
+begin
+  case Mode of
+       0: Result := 256;
+    1..3: Result := 16;
+    else
+      ShowMessage('Unsupported mode for Number of Colors: ' + IntToStr(Mode));
+  end;
+end;
+
 
 procedure ExtarctPal(bmp: tBitmap; var Data: tData);
   var i, n: integer;
@@ -256,5 +301,25 @@ begin
       end;
 end;
 
+
+procedure Import4bpTile16(const bmp: tBitmap; Pic: pPicture);
+  type
+    tBmpLine = array [0 .. 1] of int64;
+    pBmpLine = ^ tBmpLine;
+
+  var X, Y, tY, w, h: integer;
+      Src: ^int64;
+begin
+  w := Pic.W shr 4;
+  h := Pic.H shr 4;
+  Src := @Pic.Data[0];
+
+  for Y := 0 to H - 1 do
+    for X := 0 to W - 1 do
+      for tY := 0 to 15 do begin
+        Src^ := pBmpLine(bmp.ScanLine[Y shl 4 + ty])^[X];
+        inc(Src);
+      end;
+end;
 
 end.

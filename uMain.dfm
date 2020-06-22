@@ -25,7 +25,7 @@ object fmMain: TfmMain
     BevelOuter = bvNone
     TabOrder = 0
     object bAddSprite: TPNGButton
-      Left = 195
+      Left = 187
       Top = 5
       Width = 35
       Height = 35
@@ -64,7 +64,7 @@ object fmMain: TfmMain
       OnClick = bAddSpriteClick
     end
     object bAddPic: TPNGButton
-      Left = 235
+      Left = 227
       Top = 5
       Width = 35
       Height = 35
@@ -96,7 +96,7 @@ object fmMain: TfmMain
       OnClick = bAddPicClick
     end
     object bAddPalette: TPNGButton
-      Left = 275
+      Left = 267
       Top = 5
       Width = 35
       Height = 35
@@ -145,7 +145,7 @@ object fmMain: TfmMain
       OnClick = bAddPaletteClick
     end
     object bImpSprite: TPNGButton
-      Left = 427
+      Left = 395
       Top = 5
       Width = 35
       Height = 35
@@ -182,7 +182,7 @@ object fmMain: TfmMain
       OnClick = bImpSpriteClick
     end
     object bSaveFile: TPNGButton
-      Left = 571
+      Left = 587
       Top = 5
       Width = 35
       Height = 35
@@ -252,7 +252,7 @@ object fmMain: TfmMain
       OnClick = bAddrClick
     end
     object bSaveAssets: TPNGButton
-      Left = 611
+      Left = 627
       Top = 5
       Width = 35
       Height = 35
@@ -393,7 +393,7 @@ object fmMain: TfmMain
       OnClick = bNewDocClick
     end
     object bImpPic: TPNGButton
-      Left = 467
+      Left = 435
       Top = 5
       Width = 35
       Height = 35
@@ -432,7 +432,7 @@ object fmMain: TfmMain
       OnClick = bImpPicClick
     end
     object bDelAsset: TPNGButton
-      Left = 675
+      Left = 691
       Top = 5
       Width = 35
       Height = 35
@@ -470,11 +470,11 @@ object fmMain: TfmMain
       OnClick = bDelAssetClick
     end
     object bImpPicTile: TPNGButton
-      Left = 507
+      Left = 475
       Top = 5
       Width = 35
       Height = 35
-      Hint = 'Import Picture (tiles)'
+      Hint = 'Import Picture (tiles 8x8)'
       ButtonLayout = pbsImageAbove
       ImageNormal.Data = {
         89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
@@ -509,7 +509,7 @@ object fmMain: TfmMain
       OnClick = bImpPicTileClick
     end
     object bAddLayer: TPNGButton
-      Left = 315
+      Left = 307
       Top = 5
       Width = 35
       Height = 35
@@ -546,6 +546,45 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bAddLayerClick
+    end
+    object bImpPicTile16: TPNGButton
+      Left = 515
+      Top = 5
+      Width = 35
+      Height = 35
+      Hint = 'Import Picture (tiles 16x16)'
+      ButtonLayout = pbsImageAbove
+      ImageNormal.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
+        7F0000000467414D410000B18F0BFC610500000002624B47440000AA8D233200
+        0000097048597300000EC400000EC401952B0E1B0000000774494D4507E30C11
+        0E14251E65306F0000021D494441547801CD954D48554114C77F83421606B570
+        110851104A142D43A850021309831641D2BE361518858BC08C3EC85ABA74D142
+        70611BA95E5058D6A28FAD51518B020B845CB878D0B7DDFE3377DEFD98F7BAA2
+        0FA2F7CE9C73FE67CEF9BF3373E7CE33D4F93175D663D84A170DABA459E2A1E1
+        23ADAB2CB765738648769EAFD22B95B56C424BB0045DCCB0F24F278FFE19C141
+        8679CD71BEE4DA5CA68336DEF3D3177CA645DE4946A5532924D84B89271CE6BB
+        CB7F43BB6C3F13D2A91410D8F26665963C453BA7B58451F7C414F61210AC618C
+        9B4C6BB293BBAC93B532C5117E582719033473D1A11CC15326E9D369E853D325
+        A5B80CA72A5D38C0196EC8B9CE39E90C410FA7E855085144C9AFBB8054DAC559
+        4684AD5CE63C19820F6CB1D1CCF8C66D16135C624A7E5A2EC0151EA407C906F2
+        A3977BF900DB791544A6D95F3989C18C6023271890ADC888B6F85705646DFC32
+        6523B16FB8C050EC3A3D2C1C392F50FF27C102F739A6968732DDDA258CD3EDDE
+        894CB8D62696D9C19C72AAF70036F392F59ACB48F51ECCB28B4B1C65A3BE69E2
+        A24EC5840ECF2C3BD3A0F50C8FD9679D6444ECE62DCFF4DC939073DE29BE8D17
+        BAC31CF46AC6E8466ED5F0D899320BB4F19C0D0EC5AA4C870E524BB080253E99
+        78BE863EA077B2C1C77F73883BDE0FCCDF096090AB3E7B906BDEAB3245048671
+        FA55714B7742245B538A08A049D75A237B82CB3447544C80FDEB603E571180E5
+        0882F46A5837C11FAB3390D2A65DD85B0000002574455874646174653A637265
+        61746500323031392D31322D31375431343A32303A33372B30303A3030F16C18
+        C20000002574455874646174653A6D6F6469667900323031392D31322D313754
+        31343A32303A33372B30303A30308031A07E0000001974455874536F66747761
+        7265007777772E696E6B73636170652E6F72679BEE3C1A0000000049454E44AE
+        426082}
+      ButtonStyle = pbsNoFrame
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bImpPicTile16Click
     end
     object eAddr: TEdit
       Left = 768
