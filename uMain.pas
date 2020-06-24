@@ -442,6 +442,7 @@ begin
   Asset := pAsset(lbList.Items.Objects[ind]);
   SetLength(Asset.Data, 0);
   Dispose( Asset );
+  lbList.Items.Delete(ind);
 end;
 
 procedure TfmMain.bMoveUpClick(Sender: TObject);
