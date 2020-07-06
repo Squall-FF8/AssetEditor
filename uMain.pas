@@ -68,7 +68,10 @@ type
     procedure bCopyAssetClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure bImpPicTile16Click(Sender: TObject);
+    procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
+    ColSrc: integer;
     procedure EmptyDoc;
   public
     procedure ShowPanel(Ind: integer);
@@ -103,6 +106,7 @@ begin
     SetLength(Asset.Data, 0);
     Dispose( Asset );
   end;
+  id := -1;
 end;
 
 
@@ -141,7 +145,8 @@ begin
   Pal.Name  := 'NewPalette';
   Pal.Kind  := atPalette;
   Pal.vAddr := $F1000;
-  //SetLength(Pic.Data, 8);
+  //Pal.Count := 16;
+  //SetLength(Pal.Data, 32);
 
   lbList.AddItem(Pal.Name, tObject(Pal));
 end;
@@ -162,16 +167,15 @@ end;
 
 
 procedure TfmMain.lbListClick(Sender: TObject);
-  var ind: integer;
 begin
-  ind := lbList.ItemIndex;
-  if ind < 0 then exit;
+  id := lbList.ItemIndex;
+  if id < 0 then exit;
 
-  case pAsset(lbList.Items.Objects[ind]).Kind of
-    1: fmSprite.SetPointer(lbList.Items.Objects[ind]);
-    2: fmPicture.SetPointer(lbList.Items.Objects[ind]);
-    3: fmPalette.SetPointer(lbList.Items.Objects[ind]);
-    4: fmLayer.SetPointer(lbList.Items.Objects[ind]);
+  case pAsset(lbList.Items.Objects[id]).Kind of
+    1: fmSprite.SetPointer(lbList.Items.Objects[id]);
+    2: fmPicture.SetPointer(lbList.Items.Objects[id]);
+    3: fmPalette.SetPointer(lbList.Items.Objects[id]);
+    4: fmLayer.SetPointer(lbList.Items.Objects[id]);
   end;
 end;
 
@@ -308,7 +312,7 @@ begin
   dSave.Filter := 'Binary File (.bin)|*.bin|All Files (*.*)|*.*';
   if not dSave.Execute then exit;
 
-  Asset := pAsset(lbList.Items.Objects[lbList.ItemIndex]);
+  Asset := pAsset(lbList.Items.Objects[id]);
   w := 0;
   f := CreateFile(pchar(dSave.FileName), GENERIC_WRITE, FILE_SHARE_WRITE, nil, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
   WriteFile(f, w, 2, n, nil);
@@ -433,32 +437,26 @@ end;
 
 
 procedure TfmMain.bDelAssetClick(Sender: TObject);
-  var ind: integer;
-      Asset: pAsset;
+  var Asset: pAsset;
 begin
-  ind := lbList.ItemIndex;
-  if ind < 0 then exit;
+  if id < 0 then exit;
 
-  Asset := pAsset(lbList.Items.Objects[ind]);
+  Asset := pAsset(lbList.Items.Objects[id]);
   SetLength(Asset.Data, 0);
   Dispose( Asset );
-  lbList.Items.Delete(ind);
+  lbList.Items.Delete(id);
 end;
 
 procedure TfmMain.bMoveUpClick(Sender: TObject);
-  var ind: integer;
 begin
-  ind := lbList.ItemIndex;
-  if ind < 1 then exit;
-  lbList.Items.Exchange(ind, ind-1);
+  if id < 1 then exit;
+  lbList.Items.Exchange(id, id-1);
 end;
 
 procedure TfmMain.bMoveDownClick(Sender: TObject);
-  var ind: integer;
 begin
-  ind := lbList.ItemIndex;
-  if (ind < 0) or (ind = (lbList.Count - 1)) then exit;
-  lbList.Items.Exchange(ind, ind+1);
+  if (id < 0) or (id = (lbList.Count - 1)) then exit;
+  lbList.Items.Exchange(id, id+1);
 end;
 
 
@@ -496,7 +494,7 @@ end;
 
 procedure TfmMain.bCopyAssetClick(Sender: TObject);
 begin
-  HexDumpInClipBoard(pAsset(lbList.Items.Objects[lbList.ItemIndex]).Data);
+  HexDumpInClipBoard(pAsset(lbList.Items.Objects[id]).Data);
 end;
 
 procedure TfmMain.ShowPanel(Ind: integer);
@@ -541,6 +539,31 @@ begin
   lbList.AddItem(Pic.Name, tObject(Pic));
 
   Import4bpTile16(bmp, Pic);
+end;
+
+
+procedure TfmMain.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  var col: integer;
+begin
+  ColSrc := -1;
+  col := XYtoCol(X, Y);
+  if (id < 0) or (pAsset(lbList.Items.Objects[id]).Kind <> atPalette) or
+     (col >= fmPalette.Pal.Count) then exit;
+
+  ColSrc := XYtoCol(X, Y);
+  fmPalette.SetColor(ColSrc);
+end;
+
+
+procedure TfmMain.ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  var col: integer;
+begin
+  col := XYtoCol(X, Y);
+  if (id < 0) or (pAsset(lbList.Items.Objects[id]).Kind <> atPalette) or
+     (ColSrc = -1) or (col >= fmPalette.Pal.Count) or
+     ((col shr 4) = (ColSrc shr 4))then exit;
+
+  fmPalette.ExchangePals(ColSrc shr 4, col shr 4);
 end;
 
 end.

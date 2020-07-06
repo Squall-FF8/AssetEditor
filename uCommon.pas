@@ -125,6 +125,9 @@ const
   );
 
 
+var
+  id: integer = -1;
+
 
 procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0);
 procedure HexDumpInClipBoard(const Data: tData);
