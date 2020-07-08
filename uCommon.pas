@@ -46,6 +46,8 @@ type
     vFlip,
     hFlip: byte;
     Pal:   byte;
+
+    Link:  integer;
   end;
   pSprite = ^tSprite;
 
@@ -62,6 +64,9 @@ type
     W, H:  integer;
     //BPP:   byte;  // 1, 2, 4, 8
     Mode:  byte;  // Linear = 0; Tile = 1;
+
+    Link:  integer;  // to a Pal
+    Ind:   integer;  // Pal Index
   end;
   pPicture = ^tPicture;
 
@@ -222,10 +227,10 @@ end;
 function GetSprMetric( Metric: integer): byte;
 begin
   case Metric of
-    8: Result := 0;
-    16: Result := 1;
-    32: Result := 2;
-    64: Result := 3;
+    0..8: Result := 0;
+    9..16: Result := 1;
+    17..32: Result := 2;
+    33..64: Result := 3;
     else
       ShowMessage(format('%d is not suitable for sprite Width/Height', [Metric]));
   end;

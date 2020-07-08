@@ -164,11 +164,19 @@ object fmPicture: TfmPicture
   end
   object Label1: TLabel
     Left = 16
-    Top = 267
+    Top = 283
     Width = 73
     Height = 13
     AutoSize = False
     Caption = 'Link:'
+  end
+  object Label2: TLabel
+    Left = 16
+    Top = 312
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Pal Number:'
   end
   object seY2: TSpinEdit
     Tag = 4
@@ -260,12 +268,24 @@ object fmPicture: TfmPicture
   object cbPal: TComboBox
     Tag = 10
     Left = 88
-    Top = 264
+    Top = 280
     Width = 145
     Height = 21
     ItemHeight = 13
     TabOrder = 8
     OnChange = ControlChange
     OnDropDown = cbPalDropDown
+  end
+  object sePal: TSpinEdit
+    Tag = 11
+    Left = 88
+    Top = 309
+    Width = 57
+    Height = 22
+    MaxValue = 15
+    MinValue = 0
+    TabOrder = 9
+    Value = 0
+    OnChange = ControlChange
   end
 end

@@ -33,6 +33,8 @@ type
     cbPixFmt: TComboBox;
     cbPal: TComboBox;
     Label1: TLabel;
+    Label2: TLabel;
+    sePal: TSpinEdit;
     procedure ControlChange(Sender: TObject);
     procedure cbPalDropDown(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -86,6 +88,7 @@ begin
   //cbBpp2.ItemIndex    := Pic.BPP;
   cbPixFmt.ItemIndex  := Pic.Mode;
   eVidAddr2.Text      := IntToHex(Pic.vAddr, 5);
+  cbPal.Text          := pAsset(fmMain.lbList.Items.Objects[Pic.Link - 1])^.Name;
 
   fmMain.ShowPanel(1);
   HexDump(fmMain.Memo.Lines, Pic.Data, Pic.Addr);
@@ -109,7 +112,13 @@ begin
      8: Pic.Mode  := cbPixFmt.ItemIndex;
      9: Pic.vAddr := StrToInt('$' + eVidAddr2.Text);
     10: begin
-        Pal := pointer(cbPal.Items.Objects[cbPal.ItemIndex]);
+        Pic.Link := integer(cbPal.Items.Objects[cbPal.ItemIndex]);
+        Pal := pointer(fmMain.lbList.Items.Objects[Pic.Link - 1]);
+        sePal.MaxValue := Pal.Count shr 4 - 1;
+        DrawImage;
+      end;
+    11: begin
+        Pic.Ind := sePal.Value;
         DrawImage;
       end;
   end;
@@ -117,7 +126,7 @@ end;
 
 
 procedure TfmPicture.DrawImage;
-  var i, j: integer;
+  var i, j, n: integer;
       tmp: array[0..255] of cardinal;
       bmp: tBitmap;
 begin
@@ -128,18 +137,21 @@ begin
   bmp.PixelFormat := ModeToFmt(Pic.Mode);
 
   j := ModeToCols(Pic.Mode);
-  if Pal = nil then
+  n := Pic.Ind shl 5;
+  if Pic.Link = 0 then
     if j = 256 then
       for i := 0 to 255 do
         tmp[i] := i + i shl 8 + i shl 16
     else
       for i := 0 to 15 do
         tmp[i] := (i*16+i) + (i*16+i) shl 8 + (i*16+i) shl 16
-  else
+  else begin
+    Pal := pointer(fmMain.lbList.Items.Objects[Pic.Link - 1]);
     for i := 0 to j - 1 do
-      tmp[i] := (Pal.Data[2*i] and $0F) shl 4 +
-                (Pal.Data[2*i] and $F0) shl 8 +
-                (Pal.Data[2*i+1] and $0F) shl 20;
+      tmp[i] := (Pal.Data[2*i + n] and $0F) shl 4 +
+                (Pal.Data[2*i + n] and $F0) shl 8 +
+                (Pal.Data[2*i+1 + n] and $0F) shl 20;
+    end;
 
   //tmp[0] := ColorToRGB(cTransCol);
   SetDIBColorTable(bmp.Canvas.Handle, 0, j, tmp[0]);
@@ -168,7 +180,7 @@ begin
   for i := 0 to fmMain.lbList.Count - 1 do begin
     Asset := pAsset(fmMain.lbList.Items.Objects[i]);
     if Asset.Kind = atPalette then
-      cbPal.AddItem(Asset.Name, tObject(Asset));
+      cbPal.AddItem(Asset.Name, tObject(i + 1));
   end;
 end;
 

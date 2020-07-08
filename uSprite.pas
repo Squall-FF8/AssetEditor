@@ -38,13 +38,17 @@ type
     cbMode: TComboBox;
     cbHFlip: TCheckBox;
     cbH: TComboBox;
+    Label18: TLabel;
+    cbPic: TComboBox;
     procedure ControlChange(Sender: TObject);
+    procedure cbPicDropDown(Sender: TObject);
   private
 
   public
     Spr: pSprite;
     procedure Setup;
     procedure SetPointer(Ptr: pointer);
+    procedure DrawImage;
   end;
 
 var
@@ -52,6 +56,8 @@ var
 
 implementation
 {$R *.dfm}
+
+uses uPicture;
 
 
 procedure TfmSprite.Setup;
@@ -78,9 +84,11 @@ begin
   sePal.Value      := Spr.Pal;
   cbHFlip.Checked  := Spr.hFlip = 1;
   cbVFlip.Checked  := Spr.vFlip = 1;
+  cbPic.Text       := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
   HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);
   fmMain.ShowPanel(0);
+  DrawImage;
 end;
 
 
@@ -102,9 +110,34 @@ begin
     10: Spr.Pal := sePal.Value;
     11: Spr.hFlip := ord(cbHFlip.Checked);
     12: Spr.vFlip := ord(cbVFlip.Checked);
+    13: begin
+        Spr.Link := integer(cbPic.Items.Objects[cbPic.ItemIndex]);
+        DrawImage;
+      end;
   end;
   PrepareSpriteData(Spr);
   HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);
+end;
+
+
+procedure TfmSprite.cbPicDropDown(Sender: TObject);
+  var i: integer;
+      Asset: pAsset;
+begin
+  cbPic.Clear;
+  for i := 0 to fmMain.lbList.Count - 1 do begin
+    Asset := pAsset(fmMain.lbList.Items.Objects[i]);
+    if Asset.Kind = atPicture then
+      cbPic.AddItem(Asset.Name, tObject(i + 1));
+  end;
+end;
+
+
+procedure TfmSprite.DrawImage;
+begin
+  if Spr.Link = 0 then exit;
+  fmPicture.Pic := pointer(fmMain.lbList.Items.Objects[Spr.Link - 1]);
+  fmPicture.DrawImage;
 end;
 
 end.

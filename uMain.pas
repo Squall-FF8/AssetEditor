@@ -215,7 +215,7 @@ end;
 
 
 procedure TfmMain.bImpSpriteClick(Sender: TObject);
-  var i, n: integer;
+  var i, n, m: integer;
       fn: string;
       bmp: tBitmap;
       Spr: pSprite;
@@ -249,16 +249,17 @@ begin
   FillChar(Pic^, Sizeof(Pic^), 0);
   Pic.Name := fn + '_Pic';
   Pic.Kind := atPicture;
-  Pic.W    := bmp.Width;
-  Pic.H    := bmp.Height;
+  Pic.W    := 1 shl (Spr.W + 3);
+  Pic.H    := 1 shl (Spr.W + 3);
   //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
   if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
   if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
   SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
   lbList.AddItem(Pic.Name, tObject(Pic));
   n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
-  for i := 0 to Pic.H - 1 do
-    Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
+  m := (bmp.Width * cTemplate[Pic.Mode].BPP) shr 3;
+  for i := 0 to bmp.Height - 1 do
+    Move(bmp.ScanLine[i]^, Pic.Data[n * i], m);
 
   New(Pal);
   FillChar(Pal^, Sizeof(Pal^), 0);
@@ -271,6 +272,8 @@ begin
   lbList.AddItem(Pal.Name, tObject(Pal));
 
   bmp.Free;
+  Spr.Link := lbList.Count - 1;
+  Pic.Link := lbList.Count;
 end;
 
 
@@ -279,6 +282,7 @@ procedure TfmMain.bImpPicClick(Sender: TObject);
       fn: string;
       bmp: tBitmap;
       Pic: pPicture;
+      Pal: pPalette;
 begin
   if not dOpenPicture.Execute then exit;
 
@@ -301,6 +305,19 @@ begin
   n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
   for i := 0 to Pic.H - 1 do
     Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
+
+  New(Pal);
+  FillChar(Pal^, Sizeof(Pal^), 0);
+  Pal.Name  := fn + '_Pal';
+  Pal.Kind  := atPalette;
+  Pal.vAddr := $F1000;
+  Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
+  SetLength(Pal.Data, 2 * Pal.Count);
+  ExtarctPal(bmp, Pal.Data);
+  lbList.AddItem(Pal.Name, tObject(Pal));
+
+  bmp.Free;
+  Pic.Link := lbList.Count;
 end;
 
 

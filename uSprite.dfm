@@ -190,6 +190,14 @@ object fmSprite: TfmSprite
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label18: TLabel
+    Left = 16
+    Top = 339
+    Width = 73
+    Height = 13
+    AutoSize = False
+    Caption = 'Link:'
+  end
   object seY: TSpinEdit
     Tag = 4
     Left = 88
@@ -341,5 +349,16 @@ object fmSprite: TfmSprite
       '16'
       '32'
       '64')
+  end
+  object cbPic: TComboBox
+    Tag = 13
+    Left = 88
+    Top = 336
+    Width = 145
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 12
+    OnChange = ControlChange
+    OnDropDown = cbPicDropDown
   end
 end
