@@ -121,8 +121,8 @@ procedure TfmPalette.DrawImage;
   var i, X, Y, c, ind: integer;
 begin
   with fmMain.Image.Canvas do begin
-    X := cX + 16 * cW;
-    Y := cX + 16 * cW;
+    X := 2*cX + 16 * cW;
+    Y := 2*cY + 16 * cW;
     fmMain.Image.SetBounds(0, 0, X, Y);
     fmMain.Image.Picture.Bitmap.PixelFormat := pf24bit;
     fmMain.Image.Picture.Bitmap.Width  := X;
@@ -138,10 +138,10 @@ begin
            (Pal.Data[ind] and $F0) shl 8 +
            (Pal.Data[ind ] and $0F) shl 20;
       X := cX + (i and $F) * cW;
-      Y := cY + (i shr 4) * cH;
+      Y := cY + (i shr 4)  * cH;
       Pen.Color   := clBlack;
       Brush.Color := c;
-      Rectangle(X, Y, X + cW, Y + cH);
+      Rectangle(X, Y, X + cW +1, Y + cH+1);
     end;
   end;
 
@@ -212,13 +212,13 @@ begin
     Yo := (ColID shr 4) * cH + cY;
 
     Pen.Color := $0;
-    Rectangle(Bounds(Xo+4, Yo+4, cW-8,cH-8));
-    Rectangle(Bounds(cX, Yo, cW*16, cH));
-    Rectangle(Bounds(cX+2, Yo+2, cW*16-4, cH-4));
+    Rectangle(Bounds(Xo+2, Yo+2, cW-3,cH-3));
+    Rectangle(Bounds(cX-2, Yo-2, cW*16+5, cH+5));
+    //Rectangle(Bounds(cX+2, Yo+2, cW*16-4, cH-4));
 
     Pen.Color := $FFFFFF;
-    Rectangle(Bounds(Xo+3, Yo+3, cW-6, cH-6));
-    Rectangle(Bounds(cX+1, Yo+1, cW*16-2, cH-2));
+    Rectangle(Bounds(Xo+1, Yo+1, cW-1, cH-1));
+    Rectangle(Bounds(cX-1, Yo-1, cW*16+3, cH+3));
   end;
 end;
 
