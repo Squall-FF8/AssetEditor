@@ -88,7 +88,8 @@ begin
   //cbBpp2.ItemIndex    := Pic.BPP;
   cbPixFmt.ItemIndex  := Pic.Mode;
   eVidAddr2.Text      := IntToHex(Pic.vAddr, 5);
-  cbPal.Text          := pAsset(fmMain.lbList.Items.Objects[Pic.Link - 1])^.Name;
+  if Pic.Link <= 0 then cbPal.Text := ''
+                   else cbPal.Text := pAsset(fmMain.lbList.Items.Objects[Pic.Link - 1])^.Name;
 
   fmMain.ShowPanel(1);
   HexDump(fmMain.Memo.Lines, Pic.Data, Pic.Addr);

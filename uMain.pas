@@ -250,7 +250,7 @@ begin
   Pic.Name := fn + '_Pic';
   Pic.Kind := atPicture;
   Pic.W    := 1 shl (Spr.W + 3);
-  Pic.H    := 1 shl (Spr.W + 3);
+  Pic.H    := 1 shl (Spr.H + 3);
   //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
   if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
   if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
