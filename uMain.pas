@@ -73,6 +73,7 @@ type
   private
     ColSrc: integer;
     procedure EmptyDoc;
+    procedure ExchangeLinks(n1, n2: integer);
   public
     procedure ShowPanel(Ind: integer);
   end;
@@ -454,7 +455,8 @@ end;
 
 
 procedure TfmMain.bDelAssetClick(Sender: TObject);
-  var Asset: pAsset;
+  var i, n: integer;
+      Asset: pAsset;
 begin
   if id < 0 then exit;
 
@@ -462,18 +464,45 @@ begin
   SetLength(Asset.Data, 0);
   Dispose( Asset );
   lbList.Items.Delete(id);
+
+  n := id + 1;
+  for i := 0 to lbList.Count - 1 do begin
+    Asset := pAsset(lbList.Items.Objects[i]);
+    if Asset.Link = n then
+      Asset.Link := 0;
+    if Asset.Link > n then
+      dec(Asset.Link);
+  end;
+end;
+
+
+procedure TfmMain.ExchangeLinks(n1, n2: integer);
+  var i: integer;
+      Asset: pAsset;
+begin
+  for i := 0 to lbList.Count - 1 do begin
+    Asset := pAsset(lbList.Items.Objects[i]);
+    if Asset.Link = n1 then
+      Asset.Link := n2
+    else if Asset.Link = n2 then
+      Asset.Link := n1;
+  end;
 end;
 
 procedure TfmMain.bMoveUpClick(Sender: TObject);
 begin
   if id < 1 then exit;
   lbList.Items.Exchange(id, id-1);
+  ExchangeLinks(id, id + 1);
+  dec(id);
 end;
 
 procedure TfmMain.bMoveDownClick(Sender: TObject);
 begin
   if (id < 0) or (id = (lbList.Count - 1)) then exit;
   lbList.Items.Exchange(id, id+1);
+  inc(id);
+  ExchangeLinks(id, id + 1);
 end;
 
 

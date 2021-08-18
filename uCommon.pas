@@ -27,6 +27,7 @@ type
     Addr: integer;
     vAddr: integer;
     Data: tData;
+    Link:  integer;
   end;
   pAsset = ^tAsset;
 
@@ -38,6 +39,7 @@ type
     Addr:  integer;
     vAddr: integer;
     Data:  tData;
+    Link:  integer;  // to a Pic
 
     X, Y:  integer;
     W, H:  byte;
@@ -46,8 +48,6 @@ type
     vFlip,
     hFlip: byte;
     Pal:   byte;
-
-    Link:  integer;
   end;
   pSprite = ^tSprite;
 
@@ -59,13 +59,13 @@ type
     Addr:  integer;
     vAddr: integer;
     Data:  tData;
+    Link:  integer;  // to a Pal
 
     X, Y:  integer;
     W, H:  integer;
     //BPP:   byte;  // 1, 2, 4, 8
     Mode:  byte;  // Linear = 0; Tile = 1;
 
-    Link:  integer;  // to a Pal
     Ind:   integer;  // Pal Index
   end;
   pPicture = ^tPicture;
@@ -78,6 +78,7 @@ type
     Addr:  integer;
     vAddr: integer;
     Data:  tData;
+    Link:  integer;  // not used
 
     Count: integer;
   end;
@@ -90,6 +91,7 @@ type
     Addr:  integer;
     vAddr: integer;
     Data:  tData;
+    Link:  integer;  // not used
 
     Mode:     byte;
     Enable:   byte;  // 1 - yes; 0 - no
