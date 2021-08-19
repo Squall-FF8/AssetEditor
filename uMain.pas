@@ -45,6 +45,7 @@ type
     ScrollBox1: TScrollBox;
     Image: TImage;
     bImpPicTile16: TPNGButton;
+    bImpBackground: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -70,6 +71,7 @@ type
     procedure bImpPicTile16Click(Sender: TObject);
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure bImpBackgroundClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -84,7 +86,7 @@ var
 implementation
 {$R *.dfm}
 
-uses uCommon, uSprite, uPicture, uPalette, uLayer;
+uses uCommon, uSprite, uPicture, uPalette, uLayer, uMap, uTiles;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -145,7 +147,7 @@ begin
   FillChar(Pal^, Sizeof(Pal^), 0);
   Pal.Name  := 'NewPalette';
   Pal.Kind  := atPalette;
-  Pal.vAddr := $F1000;
+  Pal.vAddr := $1FA00;
   //Pal.Count := 16;
   //SetLength(Pal.Data, 32);
 
@@ -177,6 +179,8 @@ begin
     2: fmPicture.SetPointer(lbList.Items.Objects[id]);
     3: fmPalette.SetPointer(lbList.Items.Objects[id]);
     4: fmLayer.SetPointer(lbList.Items.Objects[id]);
+    5: fmMap.SetPointer(lbList.Items.Objects[id]);
+    6: fmTiles.SetPointer(lbList.Items.Objects[id]);
   end;
 end;
 
@@ -266,7 +270,7 @@ begin
   FillChar(Pal^, Sizeof(Pal^), 0);
   Pal.Name  := fn + '_Pal';
   Pal.Kind  := atPalette;
-  Pal.vAddr := $F1000;
+  Pal.vAddr := $1FA00;
   Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
   SetLength(Pal.Data, 2 * Pal.Count);
   ExtarctPal(bmp, Pal.Data);
@@ -311,7 +315,7 @@ begin
   FillChar(Pal^, Sizeof(Pal^), 0);
   Pal.Name  := fn + '_Pal';
   Pal.Kind  := atPalette;
-  Pal.vAddr := $F1000;
+  Pal.vAddr := $1FA00;
   Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
   SetLength(Pal.Data, 2 * Pal.Count);
   ExtarctPal(bmp, Pal.Data);
@@ -398,6 +402,8 @@ procedure TfmMain.bLoadDocClick(Sender: TObject);
       Pic: pPicture;
       Pal: pPalette;
       Lay: pLayer;
+      Map: pMap;
+      Tiles: pTile;
 begin
   if not dOpen.Execute then exit;
 
@@ -440,6 +446,22 @@ begin
         SetLength(Lay.Data, Lay._Len);
         ReadFile(f, Lay.Data[0], Lay._Len, n, nil);
         lbList.AddItem(Lay.Name, tObject(Lay));
+       end;
+      atMap: begin
+        New(Map);
+        ReadFile(f, Map^, SizeOf(tMap), n, nil);
+        pCardinal(@Map.Data)^ := 0;
+        SetLength(Map.Data, Map._Len);
+        ReadFile(f, Map.Data[0], Map._Len, n, nil);
+        lbList.AddItem(Map.Name, tObject(Map));
+       end;
+      atTile: begin
+        New(Tiles);
+        ReadFile(f, Tiles^, SizeOf(tTile), n, nil);
+        pCardinal(@Tiles.Data)^ := 0;
+        SetLength(Tiles.Data, Tiles._Len);
+        ReadFile(f, Tiles.Data[0], Tiles._Len, n, nil);
+        lbList.AddItem(Tiles.Name, tObject(Tiles));
        end;
     end;
   end;
@@ -558,6 +580,8 @@ begin
   fmPicture.Setup;
   fmPalette.Setup;
   fmLayer.Setup;
+  fmMap.Setup;
+  fmTiles.Setup;
 end;
 
 
@@ -610,6 +634,119 @@ begin
      ((col shr 4) = (ColSrc shr 4))then exit;
 
   fmPalette.ExchangePals(ColSrc shr 4, col shr 4);
+end;
+
+
+procedure TfmMain.bImpBackgroundClick(Sender: TObject);
+  type
+    tMyTile = array [0 .. 7] of integer;
+    pMyTile = ^ tMyTile;
+
+  var i, j, n: integer;
+      fn: string;
+      t1, t2: pMyTile;
+      bmp: tBitmap;
+      Pic: pPicture;
+      Map: pMap;
+      Tile: pTile;
+      Pal: pPalette;
+      tmp: array[0 .. 255] of cardinal;
+
+      X, Y, tY: integer;
+      t: word;
+      Src: ^integer;
+begin
+  if not dOpenPicture.Execute then exit;
+
+  bmp := tBitmap.Create;
+  bmp.LoadFromFile(dOpenPicture.FileName);
+  fn := ExtractFileName(dOpenPicture.FileName);
+  Delete(fn, Length(fn) - 3, 4);
+
+  New(Pic);
+  FillChar(Pic^, Sizeof(Pic^), 0);
+  Pic.W    := bmp.Width;
+  Pic.H    := bmp.Height;
+  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
+  Import4bpTile(bmp, Pic);
+
+  New(Pal);
+  FillChar(Pal^, Sizeof(Pal^), 0);
+  Pal.Name  := fn + '_Pal';
+  Pal.Kind  := atPalette;
+  Pal.vAddr := $1FA00;
+  Pal.Count := 16;
+  SetLength(Pal.Data, 2 * Pal.Count);
+  ExtarctPal(bmp, Pal.Data);
+  lbList.AddItem(Pal.Name, tObject(Pal));
+
+  GetDIBColorTable(bmp.Canvas.Handle, 0, 16, tmp[0]);
+  bmp.Free;
+
+  New(Tile);
+  FillChar(Tile^, Sizeof(Tile^), 0);
+  Tile.Name := fn + '_Tiles';
+  Tile.Kind := atTile;
+  SetLength(Tile.Data, (Pic.W * Pic.H) shr 1);
+  lbList.AddItem(Tile.Name, tObject(Tile));
+
+  New(Map);
+  FillChar(Map^, Sizeof(Map^), 0);
+  Map.Name := fn + '_Map';
+  Map.Kind := atMap;
+  Map.W := Pic.W shr 3;
+  Map.H := Pic.H shr 3;
+  SetLength(Map.Data, Map.W * Map.H * 2);
+  lbList.AddItem(Map.Name, tObject(Map));
+
+  n := 0;
+  FillChar(Tile.Data[0], 32, 0); // The first tiles is always empty one
+  for i := 0 to Map.W * Map.H - 1 do begin
+    j := 0;
+    t1 := @Pic.Data[i*32];
+    t2 := @Tile.Data[0];
+    repeat
+      if (t1[0] = t2[0]) and (t1[1] = t2[1]) and (t1[2] = t2[2]) and (t1[3] = t2[3]) and
+         (t1[4] = t2[4]) and (t1[5] = t2[5]) and (t1[6] = t2[6]) and (t1[7] = t2[7]) then begin
+        pWord(@Map.Data[2*i])^ := j;
+        break;
+      end;
+      inc(j);
+      inc(t2);
+    until j > n;
+    if j > n then begin
+      Move(t1[0], t2[0], 32); // copy a tile
+      inc(n);
+      pWord(@Map.Data[2*i])^ := n;
+    end;
+  end;
+  Tile.Num := n + 1;
+  SetLength(Tile.Data, Tile.Num * 32);
+
+  bmp := tBitmap.Create;
+  bmp.Width  := Pic.W;
+  bmp.Height := Pic.H;
+  bmp.PixelFormat := pf4bit;
+  SetDIBColorTable(bmp.Canvas.Handle, 0, 16, tmp[0]);
+
+  for Y := 0 to Map.H - 1 do
+    for X := 0 to Map.W - 1 do begin
+      t := Map.Data[2* (Y*Map.W + X)] and $3FF;
+      Src := @Tile.Data[ t*32];
+      for tY := 0 to 7 do begin
+        pMyTile(bmp.ScanLine[Y shl 3 + ty])^[X] := Src^;
+        inc(Src);
+      end;
+    end;
+
+  Image.SetBounds(0, 0, 2*Pic.W, 2*Pic.H);
+  Image.Picture.Bitmap.PixelFormat := pf24bit;
+  Image.Picture.Bitmap.Width  := 2*Pic.W;
+  Image.Picture.Bitmap.Height := 2*Pic.H;
+  Image.Canvas.StretchDraw(Bounds(0, 0, 2*Pic.W, 2*Pic.H), bmp);
+  bmp.Free;
+
+  Dispose(Pic);
 end;
 
 end.

@@ -10,6 +10,8 @@ const
   atPicture = 2;
   atPalette = 3;
   atLayer   = 4;
+  atMap     = 5;
+  atTile    = 6;
 
   // Picture Modes
   //pmLinear = 0;
@@ -106,10 +108,38 @@ type
   end;
   pLayer = ^tLayer;
 
+  tTile = record
+    Kind: byte;
+    _Len: integer;
+    Name: tAssetName;
+    Addr: integer;
+    vAddr: integer;
+    Data: tData;
+    Link: integer;
+
+    Num:  integer;
+  end;
+  pTile = ^tTile;
+
+  tMap = record
+    Kind: byte;
+    _Len: integer;
+    Name: tAssetName;
+    Addr: integer;
+    vAddr: integer;
+    Data: tData;
+    Link: integer;
+
+    W, H:  integer;  // in tiles not in pixels
+    Pal:   integer;  // Pal Index
+  end;
+  pMap = ^tMap;
+
 
 const
-  cKindLen: array[1 .. 4] of integer =
-    (SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer));
+  cKindLen: array[1 .. 6] of integer =
+    (SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
+     SizeOf(tMap), SizeOf(tTile) );
 
 
 type

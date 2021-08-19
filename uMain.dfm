@@ -139,7 +139,7 @@ object fmMain: TfmMain
       OnClick = bAddPaletteClick
     end
     object bImpSprite: TPNGButton
-      Left = 395
+      Left = 387
       Top = 5
       Width = 35
       Height = 35
@@ -174,7 +174,7 @@ object fmMain: TfmMain
       OnClick = bImpSpriteClick
     end
     object bSaveFile: TPNGButton
-      Left = 587
+      Left = 611
       Top = 5
       Width = 35
       Height = 35
@@ -216,7 +216,7 @@ object fmMain: TfmMain
       Caption = 'Address:'
     end
     object bAddr: TPNGButton
-      Left = 816
+      Left = 840
       Top = 20
       Width = 21
       Height = 21
@@ -241,11 +241,11 @@ object fmMain: TfmMain
       OnClick = bAddrClick
     end
     object bSaveAssets: TPNGButton
-      Left = 627
+      Left = 651
       Top = 5
       Width = 35
       Height = 35
-      Hint = 'Save All Assets'
+      Hint = 'Export All Assets'
       ButtonLayout = pbsImageAbove
       ImageNormal.Data = {
         89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
@@ -272,13 +272,14 @@ object fmMain: TfmMain
       OnClick = bSaveAssetsClick
     end
     object bGenerateSource: TPNGButton
-      Left = 848
-      Top = 17
-      Width = 23
-      Height = 23
-      Hint = 'Generate Source Code'
+      Left = 872
+      Top = 9
+      Width = 35
+      Height = 35
+      Hint = 'Generate Source Code (in Pascal)'
       ButtonLayout = pbsImageAbove
-      ButtonStyle = pbsDefault
+      Caption = 'PAS'
+      ButtonStyle = pbsFlat
       ParentShowHint = False
       ShowHint = True
       OnClick = bGenerateSourceClick
@@ -374,7 +375,7 @@ object fmMain: TfmMain
       OnClick = bNewDocClick
     end
     object bImpPic: TPNGButton
-      Left = 435
+      Left = 427
       Top = 5
       Width = 35
       Height = 35
@@ -410,7 +411,7 @@ object fmMain: TfmMain
       OnClick = bImpPicClick
     end
     object bDelAsset: TPNGButton
-      Left = 691
+      Left = 715
       Top = 5
       Width = 35
       Height = 35
@@ -445,7 +446,7 @@ object fmMain: TfmMain
       OnClick = bDelAssetClick
     end
     object bImpPicTile: TPNGButton
-      Left = 475
+      Left = 467
       Top = 5
       Width = 35
       Height = 35
@@ -486,6 +487,7 @@ object fmMain: TfmMain
       Width = 35
       Height = 35
       Hint = 'New Layer'
+      Visible = False
       ButtonLayout = pbsImageAbove
       ImageNormal.Data = {
         89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
@@ -518,7 +520,7 @@ object fmMain: TfmMain
       OnClick = bAddLayerClick
     end
     object bImpPicTile16: TPNGButton
-      Left = 515
+      Left = 507
       Top = 5
       Width = 35
       Height = 35
@@ -553,8 +555,44 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = bImpPicTile16Click
     end
+    object bImpBackground: TPNGButton
+      Left = 547
+      Top = 5
+      Width = 35
+      Height = 35
+      Hint = 'Import Background (tiles 8x8)'
+      ButtonLayout = pbsImageAbove
+      ImageNormal.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
+        7F0000000467414D410000B18F0BFC610500000002624B47440000AA8D233200
+        0000097048597300000EC400000EC401952B0E1B0000000774494D4507E30C11
+        0E14251E65306F000001C04944415478DAD5954B28446114C77F37CA238A8585
+        52A244224B296452681265A1C89E0D8AC84279E49161394B0B0B350B36C228F2
+        5C786C09B1A0508A8585F2669C7B0D33F7CE5CC39D52FEB7BEEF7EE79EF3BBDF
+        F37C0A614A091F908E8D088BD1AFAC289C93124607CE143C525D726F21388664
+        75082AC0C69A054009AB7F06A8A48F031AB9FB0D2093139EBDEF572449D98CF3
+        E78022DC6C50C3A3D63A244BCA7A5C3F05A8E17152BBBD882C5A65084ECDD714
+        10C538132C6B1FE689F53ACD50CB932EAC4DD0FD81804DA6A892DD50257FFCF8
+        FBA7DC5F0351D5CE9894A374EA0115B460D71CEEA51D8B5EBE5E74E0F0DA06E9
+        F6079C9266087A60961BBF5ECCE8C2550DB1E40304CACE82C192CDBEC1B24CA9
+        39209226992E9F1C32C52FC11CCD000ABDF4F8B5FBA4EDF93F806B1669080298
+        A44C3B132100B7E4702675200052D9233E1460973C06A823511E9F6EE471C9E6
+        D925D70858A75867F190CF115BB2EE7A1D8B3D831D431E5F532423A718B2F2AD
+        CC4226DB24E86C05B291920C0378E5C2FC5E289733F9097EA39AB9E06EDF5D2C
+        5D0C7FBD8D98397D075064E1EAA59E96D3E8B1028068496B91141A92E92F00A8
+        57875C3B58078454D88077AB3390D23FC6BB7B0000002574455874646174653A
+        63726561746500323031392D31322D31375431343A32303A33372B30303A3030
+        F16C18C20000002574455874646174653A6D6F6469667900323031392D31322D
+        31375431343A32303A33372B30303A30308031A07E0000001974455874536F66
+        7477617265007777772E696E6B73636170652E6F72679BEE3C1A000000004945
+        4E44AE426082}
+      ButtonStyle = pbsNoFrame
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bImpBackgroundClick
+    end
     object eAddr: TEdit
-      Left = 768
+      Left = 792
       Top = 20
       Width = 49
       Height = 21

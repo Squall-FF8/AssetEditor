@@ -7,7 +7,9 @@ uses
   uLayer in 'uLayer.pas' {fmLayer},
   uSprite in 'uSprite.pas' {fmSprite},
   uPicture in 'uPicture.pas' {fmPicture},
-  uPalette in 'uPalette.pas' {fmPalette};
+  uPalette in 'uPalette.pas' {fmPalette},
+  uMap in 'uMap.pas' {fmMap},
+  uTiles in 'uTiles.pas' {fmTiles};
 
 {$R *.res}
 
@@ -18,5 +20,7 @@ begin
   Application.CreateForm(TfmSprite, fmSprite);
   Application.CreateForm(TfmPicture, fmPicture);
   Application.CreateForm(TfmPalette, fmPalette);
+  Application.CreateForm(TfmMap, fmMap);
+  Application.CreateForm(TfmTiles, fmTiles);
   Application.Run;
 end.
