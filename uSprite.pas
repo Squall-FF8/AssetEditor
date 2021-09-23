@@ -84,7 +84,8 @@ begin
   sePal.Value      := Spr.Pal;
   cbHFlip.Checked  := Spr.hFlip = 1;
   cbVFlip.Checked  := Spr.vFlip = 1;
-  cbPic.Text       := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
+  if Spr.Link > 0 then
+    cbPic.Text     := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
   HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);
   fmMain.ShowPanel(0);
