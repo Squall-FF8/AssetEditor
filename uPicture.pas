@@ -35,6 +35,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     sePal: TSpinEdit;
+    cbNoExport: TCheckBox;
     procedure ControlChange(Sender: TObject);
     procedure cbPalDropDown(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -89,6 +90,7 @@ begin
   cbPixFmt.ItemIndex  := Pic.Mode;
   eVidAddr2.Text      := IntToHex(Pic.vAddr, 5);
   sePal.Value         := Pic.Ind;
+  cbNoExport.Checked := (Pic.Flags and 1) = 1;
   if Pic.Link <= 0 then cbPal.Text := ''
                    else cbPal.Text := pAsset(fmMain.lbList.Items.Objects[Pic.Link - 1])^.Name;
 
@@ -123,6 +125,7 @@ begin
         Pic.Ind := sePal.Value;
         DrawImage;
       end;
+    20: Pic.Flags := (Pic.Flags and $FE) + ord(cbNoExport.Checked);
   end;
 end;
 

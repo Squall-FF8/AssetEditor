@@ -40,6 +40,7 @@ type
     cbH: TComboBox;
     Label18: TLabel;
     cbPic: TComboBox;
+    cbNoExport: TCheckBox;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
   private
@@ -84,6 +85,7 @@ begin
   sePal.Value      := Spr.Pal;
   cbHFlip.Checked  := Spr.hFlip = 1;
   cbVFlip.Checked  := Spr.vFlip = 1;
+  cbNoExport.Checked := (Spr.Flags and 1) = 1;
   if Spr.Link > 0 then
     cbPic.Text     := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
@@ -115,6 +117,7 @@ begin
         Spr.Link := integer(cbPic.Items.Objects[cbPic.ItemIndex]);
         DrawImage;
       end;
+    20: Spr.Flags := (Spr.Flags and $FE) + ord(cbNoExport.Checked);
   end;
   PrepareSpriteData(Spr);
   HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);

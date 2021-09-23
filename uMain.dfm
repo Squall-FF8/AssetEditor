@@ -615,7 +615,13 @@ object fmMain: TfmMain
       Width = 280
       Height = 480
       Align = alClient
-      ItemHeight = 13
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ItemHeight = 16
+      ParentFont = False
       TabOrder = 0
       OnClick = lbListClick
     end

@@ -15,7 +15,7 @@ object fmSprite: TfmSprite
   TextHeight = 13
   object Label9: TLabel
     Left = 16
-    Top = 152
+    Top = 168
     Width = 57
     Height = 13
     AutoSize = False
@@ -23,7 +23,7 @@ object fmSprite: TfmSprite
   end
   object Label8: TLabel
     Left = 152
-    Top = 128
+    Top = 144
     Width = 11
     Height = 13
     Caption = 'px'
@@ -36,7 +36,7 @@ object fmSprite: TfmSprite
   end
   object Label7: TLabel
     Left = 16
-    Top = 128
+    Top = 144
     Width = 57
     Height = 13
     AutoSize = False
@@ -44,7 +44,7 @@ object fmSprite: TfmSprite
   end
   object Label6: TLabel
     Left = 152
-    Top = 104
+    Top = 120
     Width = 11
     Height = 13
     Caption = 'px'
@@ -57,7 +57,7 @@ object fmSprite: TfmSprite
   end
   object Label5: TLabel
     Left = 152
-    Top = 80
+    Top = 96
     Width = 11
     Height = 13
     Caption = 'px'
@@ -70,7 +70,7 @@ object fmSprite: TfmSprite
   end
   object Label4: TLabel
     Left = 16
-    Top = 104
+    Top = 120
     Width = 57
     Height = 13
     AutoSize = False
@@ -78,7 +78,7 @@ object fmSprite: TfmSprite
   end
   object Label3: TLabel
     Left = 16
-    Top = 80
+    Top = 96
     Width = 57
     Height = 13
     AutoSize = False
@@ -86,7 +86,7 @@ object fmSprite: TfmSprite
   end
   object Label2: TLabel
     Left = 16
-    Top = 48
+    Top = 64
     Width = 57
     Height = 13
     AutoSize = False
@@ -94,7 +94,7 @@ object fmSprite: TfmSprite
   end
   object Label17: TLabel
     Left = 152
-    Top = 256
+    Top = 272
     Width = 25
     Height = 13
     Caption = 'index'
@@ -107,7 +107,7 @@ object fmSprite: TfmSprite
   end
   object Label16: TLabel
     Left = 16
-    Top = 256
+    Top = 272
     Width = 57
     Height = 13
     AutoSize = False
@@ -115,7 +115,7 @@ object fmSprite: TfmSprite
   end
   object Label15: TLabel
     Left = 16
-    Top = 232
+    Top = 248
     Width = 57
     Height = 13
     AutoSize = False
@@ -123,7 +123,7 @@ object fmSprite: TfmSprite
   end
   object Label14: TLabel
     Left = 16
-    Top = 184
+    Top = 200
     Width = 57
     Height = 13
     AutoSize = False
@@ -131,7 +131,7 @@ object fmSprite: TfmSprite
   end
   object Label13: TLabel
     Left = 152
-    Top = 208
+    Top = 224
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -144,7 +144,7 @@ object fmSprite: TfmSprite
   end
   object Label12: TLabel
     Left = 16
-    Top = 208
+    Top = 224
     Width = 73
     Height = 13
     AutoSize = False
@@ -152,7 +152,7 @@ object fmSprite: TfmSprite
   end
   object Label11: TLabel
     Left = 152
-    Top = 48
+    Top = 64
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -165,7 +165,7 @@ object fmSprite: TfmSprite
   end
   object Label10: TLabel
     Left = 152
-    Top = 152
+    Top = 168
     Width = 11
     Height = 13
     Caption = 'px'
@@ -178,7 +178,7 @@ object fmSprite: TfmSprite
   end
   object Label1: TLabel
     Left = 16
-    Top = 24
+    Top = 40
     Width = 57
     Height = 13
     AutoSize = False
@@ -192,7 +192,7 @@ object fmSprite: TfmSprite
   end
   object Label18: TLabel
     Left = 16
-    Top = 339
+    Top = 355
     Width = 73
     Height = 13
     AutoSize = False
@@ -201,7 +201,7 @@ object fmSprite: TfmSprite
   object seY: TSpinEdit
     Tag = 4
     Left = 88
-    Top = 101
+    Top = 117
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -213,7 +213,7 @@ object fmSprite: TfmSprite
   object seX: TSpinEdit
     Tag = 3
     Left = 88
-    Top = 77
+    Top = 93
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -225,7 +225,7 @@ object fmSprite: TfmSprite
   object sePal: TSpinEdit
     Tag = 10
     Left = 88
-    Top = 253
+    Top = 269
     Width = 57
     Height = 22
     MaxValue = 15
@@ -237,7 +237,7 @@ object fmSprite: TfmSprite
   object eVidAddr: TEdit
     Tag = 8
     Left = 88
-    Top = 205
+    Top = 221
     Width = 57
     Height = 21
     TabOrder = 3
@@ -246,7 +246,7 @@ object fmSprite: TfmSprite
   object eName: TEdit
     Tag = 1
     Left = 88
-    Top = 21
+    Top = 37
     Width = 145
     Height = 21
     TabOrder = 4
@@ -255,7 +255,7 @@ object fmSprite: TfmSprite
   object eAddress: TEdit
     Tag = 2
     Left = 88
-    Top = 45
+    Top = 61
     Width = 57
     Height = 21
     ReadOnly = True
@@ -265,7 +265,7 @@ object fmSprite: TfmSprite
   object cbZ: TComboBox
     Tag = 9
     Left = 88
-    Top = 229
+    Top = 245
     Width = 105
     Height = 21
     Style = csDropDownList
@@ -283,7 +283,7 @@ object fmSprite: TfmSprite
   object cbW: TComboBox
     Tag = 5
     Left = 88
-    Top = 125
+    Top = 141
     Width = 57
     Height = 21
     Style = csDropDownList
@@ -301,7 +301,7 @@ object fmSprite: TfmSprite
   object cbVFlip: TCheckBox
     Tag = 12
     Left = 88
-    Top = 304
+    Top = 320
     Width = 85
     Height = 17
     Caption = 'Vertical Flip:'
@@ -310,7 +310,7 @@ object fmSprite: TfmSprite
   object cbMode: TComboBox
     Tag = 7
     Left = 88
-    Top = 181
+    Top = 197
     Width = 57
     Height = 21
     Style = csDropDownList
@@ -326,7 +326,7 @@ object fmSprite: TfmSprite
   object cbHFlip: TCheckBox
     Tag = 11
     Left = 88
-    Top = 288
+    Top = 304
     Width = 85
     Height = 17
     Caption = 'Horizontal Flip:'
@@ -335,7 +335,7 @@ object fmSprite: TfmSprite
   object cbH: TComboBox
     Tag = 6
     Left = 88
-    Top = 149
+    Top = 165
     Width = 57
     Height = 21
     Style = csDropDownList
@@ -353,12 +353,25 @@ object fmSprite: TfmSprite
   object cbPic: TComboBox
     Tag = 13
     Left = 88
-    Top = 336
+    Top = 352
     Width = 145
     Height = 21
     ItemHeight = 13
     TabOrder = 12
     OnChange = ControlChange
     OnDropDown = cbPicDropDown
+  end
+  object cbNoExport: TCheckBox
+    Tag = 20
+    Left = 88
+    Top = 8
+    Width = 85
+    Height = 17
+    Hint = 'Don'#39't add this Asset in Export'
+    Caption = 'Don'#39't Export:'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 13
+    OnClick = ControlChange
   end
 end

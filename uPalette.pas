@@ -35,6 +35,7 @@ type
     eColHex: TEdit;
     shColor: TShape;
     bDeletePal: TPNGButton;
+    cbNoExport: TCheckBox;
     procedure ControlChange(Sender: TObject);
     procedure bAppPalClick(Sender: TObject);
     procedure cbPalCloseUp(Sender: TObject);
@@ -92,6 +93,7 @@ begin
   eAddress3.Text   := IntToHex(Pal.Addr, 4);
   seCount3.Value   := Pal.Count;
   eVidAddr3.Text   := IntToHex(Pal.vAddr, 5);
+  cbNoExport.Checked := (Pal.Flags and 1) = 1;
 
   SetColor(0);
   fmMain.ShowPanel(2);
@@ -113,6 +115,7 @@ begin
         SetLength(Pal.Data, 2 * Pal.Count);
       end;
      4: Pal.vAddr := StrToInt('$' + eVidAddr3.Text);
+    20: Pal.Flags := (Pal.Flags and $FE) + ord(cbNoExport.Checked);
   end;
 end;
 

@@ -24,6 +24,7 @@ type
 
   tAsset = record
     Kind: byte;
+    Flags: byte;
     _Len: integer;
     Name: tAssetName;
     Addr: integer;
@@ -36,6 +37,7 @@ type
 
   tSprite = record
     Kind:  byte;
+    Flags: byte;
     _Len:  integer;
     Name:  tAssetName;
     Addr:  integer;
@@ -56,6 +58,7 @@ type
 
   tPicture = record
     Kind:  byte;
+    Flags: byte;
     _Len:  integer;
     Name:  tAssetName;
     Addr:  integer;
@@ -75,6 +78,7 @@ type
 
   tPalette = record
     Kind:  byte;
+    Flags: byte;
     _Len:  integer;
     Name:  tAssetName;
     Addr:  integer;
@@ -88,6 +92,7 @@ type
 
   tLayer = record
     Kind:  byte;
+    Flags: byte;
     _Len:  integer;
     Name:  tAssetName;
     Addr:  integer;
@@ -110,6 +115,7 @@ type
 
   tTile = record
     Kind: byte;
+    Flags: byte;
     _Len: integer;
     Name: tAssetName;
     Addr: integer;
@@ -123,6 +129,7 @@ type
 
   tMap = record
     Kind: byte;
+    Flags: byte;
     _Len: integer;
     Name: tAssetName;
     Addr: integer;

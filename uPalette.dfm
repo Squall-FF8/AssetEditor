@@ -15,7 +15,7 @@ object fmPalette: TfmPalette
   TextHeight = 13
   object Label45: TLabel
     Left = 152
-    Top = 104
+    Top = 120
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -28,7 +28,7 @@ object fmPalette: TfmPalette
   end
   object Label44: TLabel
     Left = 16
-    Top = 104
+    Top = 120
     Width = 73
     Height = 13
     AutoSize = False
@@ -36,7 +36,7 @@ object fmPalette: TfmPalette
   end
   object Label42: TLabel
     Left = 152
-    Top = 48
+    Top = 64
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -49,7 +49,7 @@ object fmPalette: TfmPalette
   end
   object Label34: TLabel
     Left = 16
-    Top = 80
+    Top = 96
     Width = 57
     Height = 13
     AutoSize = False
@@ -57,7 +57,7 @@ object fmPalette: TfmPalette
   end
   object Label33: TLabel
     Left = 16
-    Top = 48
+    Top = 64
     Width = 57
     Height = 13
     AutoSize = False
@@ -65,7 +65,7 @@ object fmPalette: TfmPalette
   end
   object Label32: TLabel
     Left = 16
-    Top = 24
+    Top = 40
     Width = 57
     Height = 13
     AutoSize = False
@@ -79,7 +79,7 @@ object fmPalette: TfmPalette
   end
   object bAppPal: TPNGButton
     Left = 8
-    Top = 246
+    Top = 262
     Width = 27
     Height = 27
     Hint = 'Append from a Palette'
@@ -108,7 +108,7 @@ object fmPalette: TfmPalette
   end
   object bDeletePal: TPNGButton
     Left = 56
-    Top = 246
+    Top = 262
     Width = 27
     Height = 27
     Hint = 'Delete Palette'
@@ -141,7 +141,7 @@ object fmPalette: TfmPalette
   object seCount3: TSpinEdit
     Tag = 3
     Left = 88
-    Top = 77
+    Top = 93
     Width = 57
     Height = 22
     MaxValue = 256
@@ -153,7 +153,7 @@ object fmPalette: TfmPalette
   object eVidAddr3: TEdit
     Tag = 4
     Left = 88
-    Top = 101
+    Top = 117
     Width = 57
     Height = 21
     TabOrder = 1
@@ -162,7 +162,7 @@ object fmPalette: TfmPalette
   object eName3: TEdit
     Tag = 1
     Left = 88
-    Top = 21
+    Top = 37
     Width = 145
     Height = 21
     TabOrder = 2
@@ -171,7 +171,7 @@ object fmPalette: TfmPalette
   object eAddress3: TEdit
     Tag = 2
     Left = 88
-    Top = 45
+    Top = 61
     Width = 57
     Height = 21
     ReadOnly = True
@@ -180,7 +180,7 @@ object fmPalette: TfmPalette
   end
   object pAddPal: TPanel
     Left = 8
-    Top = 280
+    Top = 296
     Width = 233
     Height = 65
     BevelInner = bvSpace
@@ -227,7 +227,7 @@ object fmPalette: TfmPalette
   end
   object Panel1: TPanel
     Left = 16
-    Top = 136
+    Top = 152
     Width = 225
     Height = 89
     BevelInner = bvSpace
@@ -316,5 +316,18 @@ object fmPalette: TfmPalette
       TabOrder = 3
       OnChange = eColHexChange
     end
+  end
+  object cbNoExport: TCheckBox
+    Tag = 20
+    Left = 88
+    Top = 8
+    Width = 85
+    Height = 17
+    Hint = 'Don'#39't add this Asset in Export'
+    Caption = 'Don'#39't Export:'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+    OnClick = ControlChange
   end
 end

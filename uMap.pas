@@ -28,6 +28,7 @@ type
     Label26: TLabel;
     seH: TSpinEdit;
     Label27: TLabel;
+    cbNoExport: TCheckBox;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
   private
@@ -66,6 +67,7 @@ begin
   seH.Value     := Map.H;
   eVidAddr.Text    := IntToHex(Map.vAddr, 5);
   sePal.Value      := Map.Pal;
+  cbNoExport.Checked := (Map.Flags and 1) = 1;
 
   //cbPic.Text       := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
@@ -94,6 +96,7 @@ begin
         Map.Link := integer(cbPic.Items.Objects[cbPic.ItemIndex]);
         DrawImage;
       end;
+    20: Map.Flags := (Map.Flags and $FE) + ord(cbNoExport.Checked);
   end;
   //PrepareSpriteData(Spr);
   HexDump(fmMain.Memo.Lines, Map.Data, Map.Addr);

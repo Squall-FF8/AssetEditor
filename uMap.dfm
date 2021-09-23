@@ -15,7 +15,7 @@ object fmMap: TfmMap
   TextHeight = 13
   object Label2: TLabel
     Left = 16
-    Top = 48
+    Top = 64
     Width = 57
     Height = 13
     AutoSize = False
@@ -23,7 +23,7 @@ object fmMap: TfmMap
   end
   object Label17: TLabel
     Left = 152
-    Top = 160
+    Top = 176
     Width = 25
     Height = 13
     Caption = 'index'
@@ -36,7 +36,7 @@ object fmMap: TfmMap
   end
   object Label16: TLabel
     Left = 16
-    Top = 160
+    Top = 176
     Width = 57
     Height = 13
     AutoSize = False
@@ -44,7 +44,7 @@ object fmMap: TfmMap
   end
   object Label13: TLabel
     Left = 152
-    Top = 136
+    Top = 152
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -57,7 +57,7 @@ object fmMap: TfmMap
   end
   object Label12: TLabel
     Left = 16
-    Top = 136
+    Top = 152
     Width = 73
     Height = 13
     AutoSize = False
@@ -65,7 +65,7 @@ object fmMap: TfmMap
   end
   object Label11: TLabel
     Left = 152
-    Top = 48
+    Top = 64
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -78,7 +78,7 @@ object fmMap: TfmMap
   end
   object Label1: TLabel
     Left = 16
-    Top = 24
+    Top = 40
     Width = 57
     Height = 13
     AutoSize = False
@@ -92,7 +92,7 @@ object fmMap: TfmMap
   end
   object Label18: TLabel
     Left = 16
-    Top = 339
+    Top = 355
     Width = 73
     Height = 13
     AutoSize = False
@@ -100,7 +100,7 @@ object fmMap: TfmMap
   end
   object Label24: TLabel
     Left = 16
-    Top = 80
+    Top = 96
     Width = 57
     Height = 13
     AutoSize = False
@@ -108,7 +108,7 @@ object fmMap: TfmMap
   end
   object Label25: TLabel
     Left = 152
-    Top = 80
+    Top = 96
     Width = 11
     Height = 13
     Caption = 'px'
@@ -121,7 +121,7 @@ object fmMap: TfmMap
   end
   object Label26: TLabel
     Left = 16
-    Top = 104
+    Top = 120
     Width = 57
     Height = 13
     AutoSize = False
@@ -129,7 +129,7 @@ object fmMap: TfmMap
   end
   object Label27: TLabel
     Left = 152
-    Top = 104
+    Top = 120
     Width = 11
     Height = 13
     Caption = 'px'
@@ -143,7 +143,7 @@ object fmMap: TfmMap
   object sePal: TSpinEdit
     Tag = 10
     Left = 88
-    Top = 157
+    Top = 173
     Width = 57
     Height = 22
     MaxValue = 15
@@ -155,7 +155,7 @@ object fmMap: TfmMap
   object eVidAddr: TEdit
     Tag = 8
     Left = 88
-    Top = 133
+    Top = 149
     Width = 57
     Height = 21
     TabOrder = 1
@@ -164,7 +164,7 @@ object fmMap: TfmMap
   object eName: TEdit
     Tag = 1
     Left = 88
-    Top = 21
+    Top = 37
     Width = 145
     Height = 21
     TabOrder = 2
@@ -173,7 +173,7 @@ object fmMap: TfmMap
   object eAddress: TEdit
     Tag = 2
     Left = 88
-    Top = 45
+    Top = 61
     Width = 57
     Height = 21
     ReadOnly = True
@@ -183,7 +183,7 @@ object fmMap: TfmMap
   object cbPic: TComboBox
     Tag = 13
     Left = 88
-    Top = 336
+    Top = 352
     Width = 145
     Height = 21
     ItemHeight = 13
@@ -194,7 +194,7 @@ object fmMap: TfmMap
   object seW: TSpinEdit
     Tag = 5
     Left = 88
-    Top = 77
+    Top = 93
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -206,7 +206,7 @@ object fmMap: TfmMap
   object seH: TSpinEdit
     Tag = 6
     Left = 88
-    Top = 101
+    Top = 117
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -214,5 +214,18 @@ object fmMap: TfmMap
     TabOrder = 6
     Value = 0
     OnChange = ControlChange
+  end
+  object cbNoExport: TCheckBox
+    Tag = 20
+    Left = 88
+    Top = 8
+    Width = 85
+    Height = 17
+    Hint = 'Don'#39't add this Asset in Export'
+    Caption = 'Don'#39't Export:'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+    OnClick = ControlChange
   end
 end
