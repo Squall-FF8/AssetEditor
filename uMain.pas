@@ -369,7 +369,8 @@ begin
   WriteFile(f, w, 2, n, nil);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
-    WriteFile(f, Asset.Data[0], Length(Asset.Data), n, nil);
+    if (Asset.Flags and 1) = 0 then
+      WriteFile(f, Asset.Data[0], Length(Asset.Data), n, nil);
   end;
   CloseHandle(f);
 end;
