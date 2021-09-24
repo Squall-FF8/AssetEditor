@@ -9,7 +9,8 @@ uses
   uPicture in 'uPicture.pas' {fmPicture},
   uPalette in 'uPalette.pas' {fmPalette},
   uMap in 'uMap.pas' {fmMap},
-  uTiles in 'uTiles.pas' {fmTiles};
+  uTiles in 'uTiles.pas' {fmTiles},
+  uRAW in 'uRAW.pas' {fmRAW};
 
 {$R *.res}
 
@@ -22,5 +23,6 @@ begin
   Application.CreateForm(TfmPalette, fmPalette);
   Application.CreateForm(TfmMap, fmMap);
   Application.CreateForm(TfmTiles, fmTiles);
+  Application.CreateForm(TfmRAW, fmRAW);
   Application.Run;
 end.

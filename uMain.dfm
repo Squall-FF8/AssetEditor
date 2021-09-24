@@ -482,7 +482,7 @@ object fmMain: TfmMain
       OnClick = bImpPicTileClick
     end
     object bAddLayer: TPNGButton
-      Left = 307
+      Left = 931
       Top = 5
       Width = 35
       Height = 35
@@ -590,6 +590,27 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bImpBackgroundClick
+    end
+    object bAddRaw: TPNGButton
+      Left = 307
+      Top = 5
+      Width = 35
+      Height = 35
+      Hint = 'New RAW asset'
+      ButtonLayout = pbsImageAbove
+      ImageNormal.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+        F4000000017352474200AECE1CE9000000AB4944415478DAED94610E80200885
+        E536DEFF34DE86961B668C21B18AB6E04F68D8FBE4A5508203122001122001BE
+        048011DA04F0B6F880380120A25021BB44B5F49E8F8D353D1BE29298343FCF49
+        227B6EA9210BD0FA510FD06B005A17B4F56E80B9E676004BEBAC90EE0E58F247
+        01567F360F6E89F69CC30D60BD07B4F12500CBA9D06CD000CA0CB112E6BB94DA
+        2F75425A57F8551C1000B5D6D25A8B80806E49D0CE0F8A044880DF036C880D26
+        24A139018E0000000049454E44AE426082}
+      ButtonStyle = pbsNoFrame
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bAddRawClick
     end
     object eAddr: TEdit
       Left = 792

@@ -46,6 +46,7 @@ type
     Image: TImage;
     bImpPicTile16: TPNGButton;
     bImpBackground: TPNGButton;
+    bAddRaw: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -72,6 +73,7 @@ type
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure bImpBackgroundClick(Sender: TObject);
+    procedure bAddRawClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -86,7 +88,7 @@ var
 implementation
 {$R *.dfm}
 
-uses uCommon, uSprite, uPicture, uPalette, uLayer, uMap, uTiles;
+uses uCommon, uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -169,6 +171,20 @@ begin
 end;
 
 
+procedure TfmMain.bAddRawClick(Sender: TObject);
+  var Raw: pAsset;
+begin
+  New(Raw);
+  FillChar(Raw^, Sizeof(Raw^), 0);
+  Raw.Name := 'NewRAW';
+  Raw.Kind := atRaw;
+  Raw.vAddr := $0;
+  SetLength(Raw.Data, 0);
+
+  lbList.AddItem(Raw.Name, tObject(Raw));
+end;
+
+
 procedure TfmMain.lbListClick(Sender: TObject);
 begin
   id := lbList.ItemIndex;
@@ -181,6 +197,7 @@ begin
     4: fmLayer.SetPointer(lbList.Items.Objects[id]);
     5: fmMap.SetPointer(lbList.Items.Objects[id]);
     6: fmTiles.SetPointer(lbList.Items.Objects[id]);
+    7: fmRAW.SetPointer(lbList.Items.Objects[id]);
   end;
 end;
 
@@ -405,6 +422,7 @@ procedure TfmMain.bLoadDocClick(Sender: TObject);
       Lay: pLayer;
       Map: pMap;
       Tiles: pTile;
+      RAW: pAsset;
 begin
   if not dOpen.Execute then exit;
 
@@ -463,6 +481,14 @@ begin
         SetLength(Tiles.Data, Tiles._Len);
         ReadFile(f, Tiles.Data[0], Tiles._Len, n, nil);
         lbList.AddItem(Tiles.Name, tObject(Tiles));
+       end;
+      atRaw: begin
+        New(RAW);
+        ReadFile(f, RAW^, SizeOf(tAsset), n, nil);
+        pCardinal(@RAW.Data)^ := 0;
+        SetLength(RAW.Data, RAW._Len);
+        ReadFile(f, RAW.Data[0], RAW._Len, n, nil);
+        lbList.AddItem(RAW.Name, tObject(RAW));
        end;
     end;
   end;
@@ -583,6 +609,7 @@ begin
   fmLayer.Setup;
   fmMap.Setup;
   fmTiles.Setup;
+  fmRAW.Setup;
 end;
 
 
@@ -749,5 +776,6 @@ begin
 
   Dispose(Pic);
 end;
+
 
 end.

@@ -12,6 +12,7 @@ const
   atLayer   = 4;
   atMap     = 5;
   atTile    = 6;
+  atRaw     = 7;
 
   // Picture Modes
   //pmLinear = 0;
@@ -144,9 +145,9 @@ type
 
 
 const
-  cKindLen: array[1 .. 6] of integer =
+  cKindLen: array[1 .. 7] of integer =
     (SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
-     SizeOf(tMap), SizeOf(tTile) );
+     SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset) );
 
 
 type
