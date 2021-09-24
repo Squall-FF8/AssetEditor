@@ -79,7 +79,7 @@ object fmRAW: TfmRAW
   end
   object bLoadData: TPNGButton
     Left = 86
-    Top = 160
+    Top = 168
     Width = 99
     Height = 28
     Hint = 'Load RAW Data from a file'
@@ -89,6 +89,27 @@ object fmRAW: TfmRAW
     ParentShowHint = False
     ShowHint = True
     OnClick = bLoadDataClick
+  end
+  object Label3: TLabel
+    Left = 152
+    Top = 147
+    Width = 36
+    Height = 13
+    Caption = 'in bytes'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 16
+    Top = 147
+    Width = 73
+    Height = 13
+    AutoSize = False
+    Caption = 'Header size:'
   end
   object eVidAddr: TEdit
     Tag = 8
@@ -141,5 +162,18 @@ object fmRAW: TfmRAW
     ShowHint = True
     TabOrder = 4
     OnClick = ControlChange
+  end
+  object seHeader: TSpinEdit
+    Left = 88
+    Top = 144
+    Width = 57
+    Height = 22
+    Hint = 'This value has meaning only before loading data!'
+    MaxValue = 100000
+    MinValue = 0
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 5
+    Value = 0
   end
 end

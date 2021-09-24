@@ -21,6 +21,9 @@ type
     cbPic: TComboBox;
     cbNoExport: TCheckBox;
     bLoadData: TPNGButton;
+    seHeader: TSpinEdit;
+    Label3: TLabel;
+    Label4: TLabel;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
     procedure bLoadDataClick(Sender: TObject);
@@ -106,14 +109,16 @@ end;
 
 
 procedure TfmRAW.bLoadDataClick(Sender: TObject);
-  var f, n: cardinal;
+  var f, n, h: cardinal;
 begin
   if not fmMain.dOpen.Execute then exit;
 
+  h := seHeader.Value;
   SetLength( RAW.Data, 0 );
   f := CreateFile(pchar(fmMain.dOpen.FileName), GENERIC_READ, FILE_SHARE_READ, nil, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-  n := GetFileSize(f, nil);
+  n := GetFileSize(f, nil) - h;
   SetLength( Raw.Data, n);
+  SetFilePointer(f, h, nil, FILE_BEGIN);
   ReadFile(f, RAW.Data[0], n, n, nil);
   CloseHandle(f);
 
