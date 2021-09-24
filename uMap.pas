@@ -71,7 +71,7 @@ begin
 
   //cbPic.Text       := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
-  HexDump(fmMain.Memo.Lines, Map.Data, Map.Addr);
+  fmMain.HexDump(Map);
   fmMain.ShowPanel(atMap - 1);
   DrawImage;
 end;
@@ -99,7 +99,7 @@ begin
     20: Map.Flags := (Map.Flags and $FE) + ord(cbNoExport.Checked);
   end;
   //PrepareSpriteData(Spr);
-  HexDump(fmMain.Memo.Lines, Map.Data, Map.Addr);
+  fmMain.HexDump(Map);
 end;
 
 

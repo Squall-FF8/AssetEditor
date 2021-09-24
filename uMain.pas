@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, XPMan, pngextra, Spin, ExtDlgs;
+  Dialogs, StdCtrls, ExtCtrls, XPMan, pngextra, Spin, ExtDlgs,
+  uCommon;
 
 type
   TfmMain = class(TForm)
@@ -47,6 +48,8 @@ type
     bImpPicTile16: TPNGButton;
     bImpBackground: TPNGButton;
     bAddRaw: TPNGButton;
+    seBank: TSpinEdit;
+    Label1: TLabel;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -80,6 +83,7 @@ type
     procedure ExchangeLinks(n1, n2: integer);
   public
     procedure ShowPanel(Ind: integer);
+    procedure HexDump(Asset: pointer);
   end;
 
 var
@@ -88,7 +92,7 @@ var
 implementation
 {$R *.dfm}
 
-uses uCommon, uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW;
+uses uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -776,6 +780,30 @@ begin
 
   Dispose(Pic);
 end;
+
+
+procedure TfmMain.HexDump(Asset: pointer);
+  var p, n, Bank: integer;
+      s: string;
+begin
+  Memo.Clear;
+  n := Length(pAsset(Asset).Data);
+  p := 0;
+  s := '';
+
+  while p <> n do begin
+    if (p and $0F) = 0 then s := s + IntToHex(pAsset(Asset).Addr + p, 4) + ': ';
+    s := s + ' ' + IntToHex(pAsset(Asset).Data[p], 2);
+    if (p and $0F) = $F then s := s + #13#10;
+    inc(p);
+  end;
+  Memo.Lines.Text := s;
+
+  Bank := seBank.Value;
+  if Bank > 0 then
+    Memo.Lines.Add(format('%d:%.4x', [Bank + (pAsset(Asset).Addr shr 13), pAsset(Asset).Addr mod 8192 + $A000] ));
+end;
+
 
 
 end.

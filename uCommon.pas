@@ -174,7 +174,7 @@ var
   id: integer = -1;
 
 
-procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0);
+//procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0; Bank: integer = 0);
 procedure HexDumpInClipBoard(const Data: tData);
 
 procedure PrepareSpriteData(Spr: pSprite);
@@ -196,25 +196,6 @@ procedure Import4bpTile16(const bmp: tBitmap; Pic: pPicture);
 
 implementation
 uses SysUtils, Dialogs, ClipBrd;
-
-
-procedure HexDump(Lines: tStrings; const Data: tData; Address: integer);
-  var p, n: integer;
-      s: string;
-begin
-  Lines.Clear;
-  n := Length(Data);
-  p := 0;
-  s := '';
-
-  while p <> n do begin
-    if (p and $0F) = 0 then s := s + IntToHex(Address + p, 4) + ': ';
-    s := s + ' ' + IntToHex(Data[p], 2);
-    if (p and $0F) = $F then s := s + #13#10;
-    inc(p);
-  end;
-  Lines.Text := s;
-end;
 
 
 procedure HexDumpInClipBoard(const Data: tData);

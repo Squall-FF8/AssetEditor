@@ -89,7 +89,7 @@ begin
   if Spr.Link > 0 then
     cbPic.Text     := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
-  HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);
+  fmMain.HexDump(Spr);
   fmMain.ShowPanel(0);
   DrawImage;
 end;
@@ -120,7 +120,7 @@ begin
     20: Spr.Flags := (Spr.Flags and $FE) + ord(cbNoExport.Checked);
   end;
   PrepareSpriteData(Spr);
-  HexDump(fmMain.Memo.Lines, Spr.Data, Spr.Addr);
+  fmMain.HexDump(Spr);
 end;
 
 

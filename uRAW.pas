@@ -59,7 +59,7 @@ begin
   eVidAddr.Text := IntToHex(RAW.vAddr, 5);
   cbNoExport.Checked := (RAW.Flags and 1) = 1;
 
-  HexDump(fmMain.Memo.Lines, RAW.Data, RAW.Addr);
+  fmMain.HexDump(RAW);
   fmMain.ShowPanel(atRaw - 1);
   DrawImage;
 end;
@@ -80,7 +80,7 @@ begin
       end;
     20: RAW.Flags := (RAW.Flags and $FE) + ord(cbNoExport.Checked);
   end;
-  HexDump(fmMain.Memo.Lines, RAW.Data, RAW.Addr);
+  fmMain.HexDump(RAW);
 end;
 
 
@@ -117,7 +117,7 @@ begin
   ReadFile(f, RAW.Data[0], n, n, nil);
   CloseHandle(f);
 
-  HexDump(fmMain.Memo.Lines, RAW.Data, RAW.Addr);
+  fmMain.HexDump(RAW);
 end;
 
 end.

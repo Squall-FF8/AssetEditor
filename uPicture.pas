@@ -95,7 +95,7 @@ begin
                    else cbPal.Text := pAsset(fmMain.lbList.Items.Objects[Pic.Link - 1])^.Name;
 
   fmMain.ShowPanel(1);
-  HexDump(fmMain.Memo.Lines, Pic.Data, Pic.Addr);
+  fmMain.HexDump(Pic);
   DrawImage;
 end;
 

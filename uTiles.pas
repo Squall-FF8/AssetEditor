@@ -61,7 +61,7 @@ begin
   eNum.Text     := IntToStr(Tiles.Num);
   cbNoExport.Checked := (Tiles.Flags and 1) = 1;
 
-  HexDump(fmMain.Memo.Lines, Tiles.Data, Tiles.Addr);
+  fmMain.HexDump(Tiles);
   fmMain.ShowPanel(atTile - 1);
   DrawImage;
 end;
@@ -82,7 +82,7 @@ begin
       end;
     20: Tiles.Flags := (Tiles.Flags and $FE) + ord(cbNoExport.Checked);
   end;
-  HexDump(fmMain.Memo.Lines, Tiles.Data, Tiles.Addr);
+  fmMain.HexDump(Tiles);
 end;
 
 

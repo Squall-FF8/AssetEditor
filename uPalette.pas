@@ -97,7 +97,7 @@ begin
 
   SetColor(0);
   fmMain.ShowPanel(2);
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
   //DrawImage;
 end;
 
@@ -181,7 +181,7 @@ begin
     Pal.Data[ind + i] := SrcPal.Data[i];
 
   pAddPal.Visible  := false;
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
   DrawImage;
 end;
 
@@ -235,7 +235,7 @@ begin
   eColHex.Text := IntToHex(col, 3);
   shColor.Brush.Color := seRed.Value shl 4 + seGreen.Value shl 12 + seBlue.Value shl 20;
   DrawImage;
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
 end;
 
 procedure TfmPalette.eColHexChange(Sender: TObject);
@@ -246,7 +246,7 @@ begin
   pWord(@Pal.Data[2 * ColID])^ := col;
   shColor.Brush.Color := (col shr 8) shl 4 + ((col shr 4) and $F) shl 12 + (col and $F) shl 20;
   DrawImage;
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
 end;
 
 
@@ -264,7 +264,7 @@ begin
 
   //DrawImage;
   SetColor(ColID);
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
 end;
 
 
@@ -282,7 +282,7 @@ begin
   //SetLength(Pal.Data, Pal.Count - 32);
 
   SetColor(ColID);
-  HexDump(fmMain.Memo.Lines, Pal.Data, Pal.Addr);
+  fmMain.HexDump(Pal);
 end;
 
 end.

@@ -86,7 +86,7 @@ begin
   eVidAddr4.Text       := IntToHex(Lay.vAddr, 5);
   cbEnabled4.Checked   := Lay.Enable = 1;
 
-  HexDump(fmMain.Memo.Lines, Lay.Data, Lay.Addr);
+  fmMain.HexDump(Lay);
   fmMain.ShowPanel(3);
 end;
 
@@ -113,7 +113,7 @@ begin
   end;
 
   PrepareLayerData(Lay);
-  HexDump(fmMain.Memo.Lines, Lay.Data, Lay.Addr);
+  fmMain.HexDump(Lay);
 end;
 
 end.

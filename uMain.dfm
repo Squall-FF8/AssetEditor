@@ -1,7 +1,7 @@
 object fmMain: TfmMain
   Left = 300
   Top = 112
-  Width = 1016
+  Width = 1069
   Height = 606
   Caption = 'Asset Editor'
   Color = clBtnFace
@@ -19,7 +19,7 @@ object fmMain: TfmMain
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1000
+    Width = 1053
     Height = 48
     Align = alTop
     BevelOuter = bvNone
@@ -209,14 +209,14 @@ object fmMain: TfmMain
       OnClick = bSaveFileClick
     end
     object Label35: TLabel
-      Left = 768
+      Left = 808
       Top = 4
       Width = 41
       Height = 13
       Caption = 'Address:'
     end
     object bAddr: TPNGButton
-      Left = 840
+      Left = 850
       Top = 20
       Width = 21
       Height = 21
@@ -272,7 +272,7 @@ object fmMain: TfmMain
       OnClick = bSaveAssetsClick
     end
     object bGenerateSource: TPNGButton
-      Left = 872
+      Left = 888
       Top = 9
       Width = 35
       Height = 35
@@ -612,14 +612,31 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = bAddRawClick
     end
+    object Label1: TLabel
+      Left = 760
+      Top = 4
+      Width = 28
+      Height = 13
+      Caption = 'Bank:'
+    end
     object eAddr: TEdit
-      Left = 792
+      Left = 801
       Top = 20
       Width = 49
       Height = 21
       MaxLength = 6
       TabOrder = 0
-      Text = '1000'
+      Text = '0000'
+    end
+    object seBank: TSpinEdit
+      Left = 760
+      Top = 20
+      Width = 41
+      Height = 22
+      MaxValue = 255
+      MinValue = 0
+      TabOrder = 1
+      Value = 0
     end
   end
   object Panel2: TPanel
@@ -776,13 +793,13 @@ object fmMain: TfmMain
   object Panel4: TPanel
     Left = 280
     Top = 48
-    Width = 720
+    Width = 773
     Height = 519
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object panEdits: TPanel
-      Left = 469
+      Left = 522
       Top = 0
       Width = 251
       Height = 519
@@ -794,7 +811,7 @@ object fmMain: TfmMain
     object Panel5: TPanel
       Left = 0
       Top = 0
-      Width = 469
+      Width = 522
       Height = 519
       Align = alClient
       BevelOuter = bvNone
@@ -802,7 +819,7 @@ object fmMain: TfmMain
       object Splitter1: TSplitter
         Left = 0
         Top = 335
-        Width = 469
+        Width = 522
         Height = 4
         Cursor = crVSplit
         Align = alBottom
@@ -810,7 +827,7 @@ object fmMain: TfmMain
       object Memo: TMemo
         Left = 0
         Top = 339
-        Width = 469
+        Width = 522
         Height = 180
         Align = alBottom
         BevelInner = bvNone
@@ -826,7 +843,7 @@ object fmMain: TfmMain
       object ScrollBox1: TScrollBox
         Left = 0
         Top = 0
-        Width = 469
+        Width = 522
         Height = 335
         Align = alClient
         BevelInner = bvNone
