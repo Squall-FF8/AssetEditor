@@ -371,8 +371,10 @@ begin
   p := StrToInt('$' + eAddr.Text);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
-    Asset.Addr := p;
-    inc(p, Length(Asset.Data));
+    if (Asset.Flags and 1) = 0 then begin
+      Asset.Addr := p;
+      inc(p, Length(Asset.Data));
+    end;
   end;
 end;
 
