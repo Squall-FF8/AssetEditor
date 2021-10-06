@@ -676,7 +676,7 @@ procedure TfmMain.bImpBackgroundClick(Sender: TObject);
     tMyTile = array [0 .. 7] of integer;
     pMyTile = ^ tMyTile;
 
-  var i, j, n: integer;
+  var i, j, n, n1, n2: integer;
       fn: string;
       t1, t2: pMyTile;
       bmp: tBitmap;
@@ -733,7 +733,9 @@ begin
   SetLength(Map.Data, Map.W * Map.H * 2);
   lbList.AddItem(Map.Name, tObject(Map));
 
-  n := 0;
+  n  := 0;
+  n1 := 0;
+  n2 := 0;
   FillChar(Tile.Data[0], 32, 0); // The first tiles is always empty one
   for i := 0 to Map.W * Map.H - 1 do begin
     j := 0;
@@ -743,6 +745,13 @@ begin
       if (t1[0] = t2[0]) and (t1[1] = t2[1]) and (t1[2] = t2[2]) and (t1[3] = t2[3]) and
          (t1[4] = t2[4]) and (t1[5] = t2[5]) and (t1[6] = t2[6]) and (t1[7] = t2[7]) then begin
         pWord(@Map.Data[2*i])^ := j;
+        inc(n1);
+        break;
+      end;
+      if (t1[0] = t2[7]) and (t1[1] = t2[6]) and (t1[2] = t2[5]) and (t1[3] = t2[4]) and
+         (t1[4] = t2[3]) and (t1[5] = t2[2]) and (t1[6] = t2[1]) and (t1[7] = t2[0]) then begin
+        pWord(@Map.Data[2*i])^ := j + $400;
+        inc(n2);
         break;
       end;
       inc(j);
@@ -756,6 +765,10 @@ begin
   end;
   Tile.Num := n + 1;
   SetLength(Tile.Data, Tile.Num * 32);
+  Memo.Clear;
+  Memo.Lines.Add('Total: ' + IntToStr(Map.W * Map.H));
+  Memo.Lines.Add('Similar: ' + IntToStr(n1));
+  Memo.Lines.Add('H-Flip: ' + IntToStr(n2));
 
   bmp := tBitmap.Create;
   bmp.Width  := Pic.W;
@@ -785,17 +798,20 @@ end;
 
 
 procedure TfmMain.HexDump(Asset: pointer);
-  var p, n, Bank: integer;
+  var p, n, m, Bank: integer;
       s: string;
 begin
   Memo.Clear;
   n := Length(pAsset(Asset).Data);
+  if pAsset(Asset).FixLen <> 0 then m := pAsset(Asset).FixLen
+                               else m := n;
   p := 0;
   s := '';
 
-  while p <> n do begin
+  while p <> m do begin
     if (p and $0F) = 0 then s := s + IntToHex(pAsset(Asset).Addr + p, 4) + ': ';
-    s := s + ' ' + IntToHex(pAsset(Asset).Data[p], 2);
+    if p < n then s := s + ' ' + IntToHex(pAsset(Asset).Data[p], 2)
+             else s := s + ' 00';
     if (p and $0F) = $F then s := s + #13#10;
     inc(p);
   end;

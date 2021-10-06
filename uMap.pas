@@ -29,6 +29,9 @@ type
     seH: TSpinEdit;
     Label27: TLabel;
     cbNoExport: TCheckBox;
+    Label3: TLabel;
+    eFixedLen: TEdit;
+    Label4: TLabel;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
   private
@@ -61,13 +64,14 @@ procedure TfmMap.SetPointer(Ptr: pointer);
 begin
   Map := Ptr;
 
-  eName.Text    := Map.Name;
-  eAddress.Text := IntToHex(Map.Addr, 4);
-  seW.Value     := Map.W;
-  seH.Value     := Map.H;
-  eVidAddr.Text    := IntToHex(Map.vAddr, 5);
-  sePal.Value      := Map.Pal;
+  eName.Text         := Map.Name;
+  eAddress.Text      := IntToHex(Map.Addr, 4);
+  seW.Value          := Map.W;
+  seH.Value          := Map.H;
+  eVidAddr.Text      := IntToHex(Map.vAddr, 5);
+  sePal.Value        := Map.Pal;
   cbNoExport.Checked := (Map.Flags and 1) = 1;
+  eFixedLen.Text     := IntToHex(Map.FixLen, 4);
 
   //cbPic.Text       := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
@@ -96,7 +100,8 @@ begin
         Map.Link := integer(cbPic.Items.Objects[cbPic.ItemIndex]);
         DrawImage;
       end;
-    20: Map.Flags := (Map.Flags and $FE) + ord(cbNoExport.Checked);
+    20: Map.Flags  := (Map.Flags and $FE) + ord(cbNoExport.Checked);
+    21: Map.FixLen := StrToInt('$' + eFixedLen.Text);
   end;
   //PrepareSpriteData(Spr);
   fmMain.HexDump(Map);

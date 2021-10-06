@@ -23,6 +23,9 @@ type
     Label4: TLabel;
     eNum: TEdit;
     cbNoExport: TCheckBox;
+    Label5: TLabel;
+    eFixedLen: TEdit;
+    Label6: TLabel;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
   private
@@ -60,6 +63,7 @@ begin
   eVidAddr.Text := IntToHex(Tiles.vAddr, 5);
   eNum.Text     := IntToStr(Tiles.Num);
   cbNoExport.Checked := (Tiles.Flags and 1) = 1;
+  eFixedLen.Text     := IntToHex(Tiles.FixLen, 4);
 
   fmMain.HexDump(Tiles);
   fmMain.ShowPanel(atTile - 1);
@@ -81,6 +85,7 @@ begin
         DrawImage;
       end;
     20: Tiles.Flags := (Tiles.Flags and $FE) + ord(cbNoExport.Checked);
+    21: Tiles.FixLen := StrToInt('$' + eFixedLen.Text);
   end;
   fmMain.HexDump(Tiles);
 end;

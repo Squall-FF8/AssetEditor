@@ -23,7 +23,7 @@ object fmRAW: TfmRAW
   end
   object Label13: TLabel
     Left = 152
-    Top = 104
+    Top = 128
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -36,7 +36,7 @@ object fmRAW: TfmRAW
   end
   object Label12: TLabel
     Left = 16
-    Top = 104
+    Top = 128
     Width = 73
     Height = 13
     AutoSize = False
@@ -71,7 +71,7 @@ object fmRAW: TfmRAW
   end
   object Label18: TLabel
     Left = 16
-    Top = 355
+    Top = 379
     Width = 73
     Height = 13
     AutoSize = False
@@ -79,7 +79,7 @@ object fmRAW: TfmRAW
   end
   object bLoadData: TPNGButton
     Left = 86
-    Top = 168
+    Top = 192
     Width = 99
     Height = 28
     Hint = 'Load RAW Data from a file'
@@ -92,7 +92,7 @@ object fmRAW: TfmRAW
   end
   object Label3: TLabel
     Left = 152
-    Top = 147
+    Top = 171
     Width = 36
     Height = 13
     Caption = 'in bytes'
@@ -105,16 +105,37 @@ object fmRAW: TfmRAW
   end
   object Label4: TLabel
     Left = 16
-    Top = 147
+    Top = 171
     Width = 73
     Height = 13
     AutoSize = False
     Caption = 'Header size:'
   end
+  object Label5: TLabel
+    Left = 16
+    Top = 88
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Fixed Len:'
+  end
+  object Label6: TLabel
+    Left = 152
+    Top = 88
+    Width = 28
+    Height = 13
+    Caption = 'in hex'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
   object eVidAddr: TEdit
     Tag = 8
     Left = 88
-    Top = 101
+    Top = 125
     Width = 57
     Height = 21
     TabOrder = 0
@@ -142,7 +163,7 @@ object fmRAW: TfmRAW
   object cbPic: TComboBox
     Tag = 13
     Left = 88
-    Top = 352
+    Top = 376
     Width = 145
     Height = 21
     ItemHeight = 13
@@ -165,7 +186,7 @@ object fmRAW: TfmRAW
   end
   object seHeader: TSpinEdit
     Left = 88
-    Top = 144
+    Top = 168
     Width = 57
     Height = 22
     Hint = 'This value has meaning only before loading data!'
@@ -175,5 +196,14 @@ object fmRAW: TfmRAW
     ShowHint = True
     TabOrder = 5
     Value = 0
+  end
+  object eFixedLen: TEdit
+    Tag = 21
+    Left = 88
+    Top = 85
+    Width = 57
+    Height = 21
+    TabOrder = 6
+    OnChange = ControlChange
   end
 end

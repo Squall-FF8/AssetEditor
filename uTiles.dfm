@@ -23,7 +23,7 @@ object fmTiles: TfmTiles
   end
   object Label13: TLabel
     Left = 152
-    Top = 104
+    Top = 128
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -36,7 +36,7 @@ object fmTiles: TfmTiles
   end
   object Label12: TLabel
     Left = 16
-    Top = 104
+    Top = 128
     Width = 73
     Height = 13
     AutoSize = False
@@ -71,7 +71,7 @@ object fmTiles: TfmTiles
   end
   object Label18: TLabel
     Left = 16
-    Top = 355
+    Top = 379
     Width = 73
     Height = 13
     AutoSize = False
@@ -79,7 +79,7 @@ object fmTiles: TfmTiles
   end
   object Label3: TLabel
     Left = 152
-    Top = 128
+    Top = 152
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -92,16 +92,37 @@ object fmTiles: TfmTiles
   end
   object Label4: TLabel
     Left = 16
-    Top = 128
+    Top = 152
     Width = 73
     Height = 13
     AutoSize = False
     Caption = 'Num of Tiles:'
   end
+  object Label5: TLabel
+    Left = 16
+    Top = 88
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Fixed Len:'
+  end
+  object Label6: TLabel
+    Left = 152
+    Top = 88
+    Width = 28
+    Height = 13
+    Caption = 'in hex'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
   object eVidAddr: TEdit
     Tag = 8
     Left = 88
-    Top = 101
+    Top = 125
     Width = 57
     Height = 21
     TabOrder = 0
@@ -129,7 +150,7 @@ object fmTiles: TfmTiles
   object cbPic: TComboBox
     Tag = 13
     Left = 88
-    Top = 352
+    Top = 376
     Width = 145
     Height = 21
     ItemHeight = 13
@@ -140,7 +161,7 @@ object fmTiles: TfmTiles
   object eNum: TEdit
     Tag = 8
     Left = 88
-    Top = 125
+    Top = 149
     Width = 57
     Height = 21
     Enabled = False
@@ -159,5 +180,14 @@ object fmTiles: TfmTiles
     ShowHint = True
     TabOrder = 5
     OnClick = ControlChange
+  end
+  object eFixedLen: TEdit
+    Tag = 21
+    Left = 88
+    Top = 85
+    Width = 57
+    Height = 21
+    TabOrder = 6
+    OnChange = ControlChange
   end
 end

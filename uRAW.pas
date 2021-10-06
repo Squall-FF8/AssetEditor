@@ -24,6 +24,9 @@ type
     seHeader: TSpinEdit;
     Label3: TLabel;
     Label4: TLabel;
+    Label5: TLabel;
+    eFixedLen: TEdit;
+    Label6: TLabel;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
     procedure bLoadDataClick(Sender: TObject);
@@ -61,6 +64,7 @@ begin
   eAddress.Text := IntToHex(RAW.Addr, 4);
   eVidAddr.Text := IntToHex(RAW.vAddr, 5);
   cbNoExport.Checked := (RAW.Flags and 1) = 1;
+  eFixedLen.Text     := IntToHex(RAW.FixLen, 4);
 
   fmMain.HexDump(RAW);
   fmMain.ShowPanel(atRaw - 1);
@@ -82,6 +86,7 @@ begin
         DrawImage;
       end;
     20: RAW.Flags := (RAW.Flags and $FE) + ord(cbNoExport.Checked);
+    21: RAW.FixLen := StrToInt('$' + eFixedLen.Text);
   end;
   fmMain.HexDump(RAW);
 end;

@@ -15,7 +15,7 @@ object fmPalette: TfmPalette
   TextHeight = 13
   object Label45: TLabel
     Left = 152
-    Top = 120
+    Top = 144
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -28,7 +28,7 @@ object fmPalette: TfmPalette
   end
   object Label44: TLabel
     Left = 16
-    Top = 120
+    Top = 144
     Width = 73
     Height = 13
     AutoSize = False
@@ -49,7 +49,7 @@ object fmPalette: TfmPalette
   end
   object Label34: TLabel
     Left = 16
-    Top = 96
+    Top = 120
     Width = 57
     Height = 13
     AutoSize = False
@@ -79,7 +79,7 @@ object fmPalette: TfmPalette
   end
   object bAppPal: TPNGButton
     Left = 8
-    Top = 262
+    Top = 286
     Width = 27
     Height = 27
     Hint = 'Append from a Palette'
@@ -108,7 +108,7 @@ object fmPalette: TfmPalette
   end
   object bDeletePal: TPNGButton
     Left = 56
-    Top = 262
+    Top = 286
     Width = 27
     Height = 27
     Hint = 'Delete Palette'
@@ -138,10 +138,31 @@ object fmPalette: TfmPalette
     ShowHint = True
     OnClick = bDeletePalClick
   end
+  object Label5: TLabel
+    Left = 16
+    Top = 88
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Fixed Len:'
+  end
+  object Label6: TLabel
+    Left = 152
+    Top = 88
+    Width = 28
+    Height = 13
+    Caption = 'in hex'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
   object seCount3: TSpinEdit
     Tag = 3
     Left = 88
-    Top = 93
+    Top = 117
     Width = 57
     Height = 22
     MaxValue = 256
@@ -153,7 +174,7 @@ object fmPalette: TfmPalette
   object eVidAddr3: TEdit
     Tag = 4
     Left = 88
-    Top = 117
+    Top = 141
     Width = 57
     Height = 21
     TabOrder = 1
@@ -180,7 +201,7 @@ object fmPalette: TfmPalette
   end
   object pAddPal: TPanel
     Left = 8
-    Top = 296
+    Top = 320
     Width = 233
     Height = 65
     BevelInner = bvSpace
@@ -227,7 +248,7 @@ object fmPalette: TfmPalette
   end
   object Panel1: TPanel
     Left = 16
-    Top = 152
+    Top = 176
     Width = 225
     Height = 89
     BevelInner = bvSpace
@@ -329,5 +350,14 @@ object fmPalette: TfmPalette
     ShowHint = True
     TabOrder = 6
     OnClick = ControlChange
+  end
+  object eFixedLen: TEdit
+    Tag = 21
+    Left = 88
+    Top = 85
+    Width = 57
+    Height = 21
+    TabOrder = 7
+    OnChange = ControlChange
   end
 end

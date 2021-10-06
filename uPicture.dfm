@@ -16,7 +16,7 @@ object fmPicture: TfmPicture
   TextHeight = 13
   object Label31: TLabel
     Left = 16
-    Top = 200
+    Top = 224
     Width = 57
     Height = 13
     AutoSize = False
@@ -24,7 +24,7 @@ object fmPicture: TfmPicture
   end
   object Label30: TLabel
     Left = 152
-    Top = 256
+    Top = 280
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -37,7 +37,7 @@ object fmPicture: TfmPicture
   end
   object Label29: TLabel
     Left = 16
-    Top = 256
+    Top = 280
     Width = 73
     Height = 13
     AutoSize = False
@@ -58,7 +58,7 @@ object fmPicture: TfmPicture
   end
   object Label27: TLabel
     Left = 152
-    Top = 168
+    Top = 192
     Width = 11
     Height = 13
     Caption = 'px'
@@ -71,7 +71,7 @@ object fmPicture: TfmPicture
   end
   object Label26: TLabel
     Left = 16
-    Top = 168
+    Top = 192
     Width = 57
     Height = 13
     AutoSize = False
@@ -79,7 +79,7 @@ object fmPicture: TfmPicture
   end
   object Label25: TLabel
     Left = 152
-    Top = 144
+    Top = 168
     Width = 11
     Height = 13
     Caption = 'px'
@@ -92,7 +92,7 @@ object fmPicture: TfmPicture
   end
   object Label24: TLabel
     Left = 16
-    Top = 144
+    Top = 168
     Width = 57
     Height = 13
     AutoSize = False
@@ -100,7 +100,7 @@ object fmPicture: TfmPicture
   end
   object Label23: TLabel
     Left = 152
-    Top = 120
+    Top = 144
     Width = 11
     Height = 13
     Caption = 'px'
@@ -113,7 +113,7 @@ object fmPicture: TfmPicture
   end
   object Label22: TLabel
     Left = 152
-    Top = 96
+    Top = 120
     Width = 11
     Height = 13
     Caption = 'px'
@@ -126,7 +126,7 @@ object fmPicture: TfmPicture
   end
   object Label21: TLabel
     Left = 16
-    Top = 120
+    Top = 144
     Width = 57
     Height = 13
     AutoSize = False
@@ -134,7 +134,7 @@ object fmPicture: TfmPicture
   end
   object Label20: TLabel
     Left = 16
-    Top = 96
+    Top = 120
     Width = 57
     Height = 13
     AutoSize = False
@@ -164,7 +164,7 @@ object fmPicture: TfmPicture
   end
   object Label1: TLabel
     Left = 16
-    Top = 299
+    Top = 323
     Width = 73
     Height = 13
     AutoSize = False
@@ -172,16 +172,37 @@ object fmPicture: TfmPicture
   end
   object Label2: TLabel
     Left = 16
-    Top = 328
+    Top = 352
     Width = 57
     Height = 13
     AutoSize = False
     Caption = 'Pal Number:'
   end
+  object Label3: TLabel
+    Left = 16
+    Top = 88
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Fixed Len:'
+  end
+  object Label4: TLabel
+    Left = 152
+    Top = 88
+    Width = 28
+    Height = 13
+    Caption = 'in hex'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
   object seY2: TSpinEdit
     Tag = 4
     Left = 88
-    Top = 117
+    Top = 141
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -193,7 +214,7 @@ object fmPicture: TfmPicture
   object seX2: TSpinEdit
     Tag = 3
     Left = 88
-    Top = 93
+    Top = 117
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -205,7 +226,7 @@ object fmPicture: TfmPicture
   object seW2: TSpinEdit
     Tag = 5
     Left = 88
-    Top = 141
+    Top = 165
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -217,7 +238,7 @@ object fmPicture: TfmPicture
   object seH2: TSpinEdit
     Tag = 6
     Left = 88
-    Top = 165
+    Top = 189
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -229,7 +250,7 @@ object fmPicture: TfmPicture
   object eVidAddr2: TEdit
     Tag = 9
     Left = 88
-    Top = 253
+    Top = 277
     Width = 57
     Height = 21
     TabOrder = 4
@@ -257,7 +278,7 @@ object fmPicture: TfmPicture
   object cbPixFmt: TComboBox
     Tag = 8
     Left = 88
-    Top = 197
+    Top = 221
     Width = 145
     Height = 21
     Style = csDropDownList
@@ -268,7 +289,7 @@ object fmPicture: TfmPicture
   object cbPal: TComboBox
     Tag = 10
     Left = 88
-    Top = 296
+    Top = 320
     Width = 145
     Height = 21
     ItemHeight = 13
@@ -279,7 +300,7 @@ object fmPicture: TfmPicture
   object sePal: TSpinEdit
     Tag = 11
     Left = 88
-    Top = 325
+    Top = 349
     Width = 57
     Height = 22
     MaxValue = 15
@@ -300,5 +321,14 @@ object fmPicture: TfmPicture
     ShowHint = True
     TabOrder = 10
     OnClick = ControlChange
+  end
+  object eFixedLen: TEdit
+    Tag = 21
+    Left = 88
+    Top = 85
+    Width = 57
+    Height = 21
+    TabOrder = 11
+    OnChange = ControlChange
   end
 end

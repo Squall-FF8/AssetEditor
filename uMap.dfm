@@ -23,7 +23,7 @@ object fmMap: TfmMap
   end
   object Label17: TLabel
     Left = 152
-    Top = 176
+    Top = 200
     Width = 25
     Height = 13
     Caption = 'index'
@@ -36,7 +36,7 @@ object fmMap: TfmMap
   end
   object Label16: TLabel
     Left = 16
-    Top = 176
+    Top = 200
     Width = 57
     Height = 13
     AutoSize = False
@@ -44,7 +44,7 @@ object fmMap: TfmMap
   end
   object Label13: TLabel
     Left = 152
-    Top = 152
+    Top = 176
     Width = 28
     Height = 13
     Caption = 'in hex'
@@ -57,7 +57,7 @@ object fmMap: TfmMap
   end
   object Label12: TLabel
     Left = 16
-    Top = 152
+    Top = 176
     Width = 73
     Height = 13
     AutoSize = False
@@ -92,7 +92,7 @@ object fmMap: TfmMap
   end
   object Label18: TLabel
     Left = 16
-    Top = 355
+    Top = 379
     Width = 73
     Height = 13
     AutoSize = False
@@ -100,7 +100,7 @@ object fmMap: TfmMap
   end
   object Label24: TLabel
     Left = 16
-    Top = 96
+    Top = 120
     Width = 57
     Height = 13
     AutoSize = False
@@ -108,7 +108,7 @@ object fmMap: TfmMap
   end
   object Label25: TLabel
     Left = 152
-    Top = 96
+    Top = 120
     Width = 11
     Height = 13
     Caption = 'px'
@@ -121,7 +121,7 @@ object fmMap: TfmMap
   end
   object Label26: TLabel
     Left = 16
-    Top = 120
+    Top = 144
     Width = 57
     Height = 13
     AutoSize = False
@@ -129,7 +129,7 @@ object fmMap: TfmMap
   end
   object Label27: TLabel
     Left = 152
-    Top = 120
+    Top = 144
     Width = 11
     Height = 13
     Caption = 'px'
@@ -140,10 +140,31 @@ object fmMap: TfmMap
     Font.Style = []
     ParentFont = False
   end
+  object Label3: TLabel
+    Left = 16
+    Top = 88
+    Width = 57
+    Height = 13
+    AutoSize = False
+    Caption = 'Fixed Len:'
+  end
+  object Label4: TLabel
+    Left = 152
+    Top = 88
+    Width = 28
+    Height = 13
+    Caption = 'in hex'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGray
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
   object sePal: TSpinEdit
     Tag = 10
     Left = 88
-    Top = 173
+    Top = 197
     Width = 57
     Height = 22
     MaxValue = 15
@@ -155,7 +176,7 @@ object fmMap: TfmMap
   object eVidAddr: TEdit
     Tag = 8
     Left = 88
-    Top = 149
+    Top = 173
     Width = 57
     Height = 21
     TabOrder = 1
@@ -183,7 +204,7 @@ object fmMap: TfmMap
   object cbPic: TComboBox
     Tag = 13
     Left = 88
-    Top = 352
+    Top = 376
     Width = 145
     Height = 21
     ItemHeight = 13
@@ -194,7 +215,7 @@ object fmMap: TfmMap
   object seW: TSpinEdit
     Tag = 5
     Left = 88
-    Top = 93
+    Top = 117
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -206,7 +227,7 @@ object fmMap: TfmMap
   object seH: TSpinEdit
     Tag = 6
     Left = 88
-    Top = 117
+    Top = 141
     Width = 57
     Height = 22
     MaxValue = 1023
@@ -227,5 +248,14 @@ object fmMap: TfmMap
     ShowHint = True
     TabOrder = 7
     OnClick = ControlChange
+  end
+  object eFixedLen: TEdit
+    Tag = 21
+    Left = 88
+    Top = 85
+    Width = 57
+    Height = 21
+    TabOrder = 8
+    OnChange = ControlChange
   end
 end

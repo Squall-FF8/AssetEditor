@@ -24,14 +24,15 @@ type
   tData = array of byte;
 
   tAsset = record
-    Kind: byte;
-    Flags: byte;
-    _Len: integer;
-    Name: tAssetName;
-    Addr: integer;
-    vAddr: integer;
-    Data: tData;
-    Link:  integer;
+    Kind:   byte;
+    Flags:  byte;
+    _Len:   integer;
+    Name:   tAssetName;
+    Addr:   integer;
+    vAddr:  integer;
+    Data:   tData;
+    Link:   integer;
+    FixLen: integer;
   end;
   pAsset = ^tAsset;
 
@@ -45,6 +46,7 @@ type
     vAddr: integer;
     Data:  tData;
     Link:  integer;  // to a Pic
+    FixLen: integer;
 
     X, Y:  integer;
     W, H:  byte;
@@ -66,6 +68,7 @@ type
     vAddr: integer;
     Data:  tData;
     Link:  integer;  // to a Pal
+    FixLen: integer;
 
     X, Y:  integer;
     W, H:  integer;
@@ -86,6 +89,7 @@ type
     vAddr: integer;
     Data:  tData;
     Link:  integer;  // not used
+    FixLen: integer;
 
     Count: integer;
   end;
@@ -100,6 +104,7 @@ type
     vAddr: integer;
     Data:  tData;
     Link:  integer;  // not used
+    FixLen: integer;
 
     Mode:     byte;
     Enable:   byte;  // 1 - yes; 0 - no
@@ -123,6 +128,7 @@ type
     vAddr: integer;
     Data: tData;
     Link: integer;
+    FixLen: integer;
 
     Num:  integer;
   end;
@@ -137,6 +143,7 @@ type
     vAddr: integer;
     Data: tData;
     Link: integer;
+    FixLen: integer;
 
     W, H:  integer;  // in tiles not in pixels
     Pal:   integer;  // Pal Index

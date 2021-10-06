@@ -41,6 +41,9 @@ type
     Label18: TLabel;
     cbPic: TComboBox;
     cbNoExport: TCheckBox;
+    Label19: TLabel;
+    eFixedLen: TEdit;
+    Label20: TLabel;
     procedure ControlChange(Sender: TObject);
     procedure cbPicDropDown(Sender: TObject);
   private
@@ -86,6 +89,7 @@ begin
   cbHFlip.Checked  := Spr.hFlip = 1;
   cbVFlip.Checked  := Spr.vFlip = 1;
   cbNoExport.Checked := (Spr.Flags and 1) = 1;
+  eFixedLen.Text     := IntToHex(Spr.FixLen, 4);
   if Spr.Link > 0 then
     cbPic.Text     := pAsset(fmMain.lbList.Items.Objects[Spr.Link - 1])^.Name;
 
@@ -118,6 +122,7 @@ begin
         DrawImage;
       end;
     20: Spr.Flags := (Spr.Flags and $FE) + ord(cbNoExport.Checked);
+    21: Spr.FixLen := StrToInt('$' + eFixedLen.Text);
   end;
   PrepareSpriteData(Spr);
   fmMain.HexDump(Spr);
