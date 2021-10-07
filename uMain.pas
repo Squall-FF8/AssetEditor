@@ -766,9 +766,10 @@ begin
   Tile.Num := n + 1;
   SetLength(Tile.Data, Tile.Num * 32);
   Memo.Clear;
-  Memo.Lines.Add('Total: ' + IntToStr(Map.W * Map.H));
-  Memo.Lines.Add('Similar: ' + IntToStr(n1));
-  Memo.Lines.Add('H-Flip: ' + IntToStr(n2));
+  Memo.Lines.Add(format('Total:   %4d', [Map.W * Map.H] ));
+  Memo.Lines.Add(format('Similar: %4d', [n1] ));
+  Memo.Lines.Add(format('H-Flip:  %4d', [n2] ));
+  Memo.Lines.Add(format('Unique:  %4d', [Tile.Num] ));
 
   bmp := tBitmap.Create;
   bmp.Width  := Pic.W;
@@ -778,7 +779,7 @@ begin
 
   for Y := 0 to Map.H - 1 do
     for X := 0 to Map.W - 1 do begin
-      t := Map.Data[2* (Y*Map.W + X)] and $3FF;
+      t := pWord(@Map.Data[2* (Y*Map.W + X)])^ and $3FF;
       Src := @Tile.Data[ t*32];
       for tY := 0 to 7 do begin
         pMyTile(bmp.ScanLine[Y shl 3 + ty])^[X] := Src^;
