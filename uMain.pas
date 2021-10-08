@@ -83,7 +83,7 @@ type
     procedure ExchangeLinks(n1, n2: integer);
   public
     procedure ShowPanel(Ind: integer);
-    procedure HexDump(Asset: pointer);
+    procedure HexDump(const Ptr);
   end;
 
 var
@@ -373,7 +373,8 @@ begin
     Asset := pAsset(lbList.Items.Objects[i]);
     if (Asset.Flags and 1) = 0 then begin
       Asset.Addr := p;
-      inc(p, Length(Asset.Data));
+      if Asset.FixLen = 0 then inc(p, Length(Asset.Data))
+                          else inc(p, Asset.FixLen);
     end;
   end;
 end;
@@ -381,6 +382,7 @@ end;
 
 procedure TfmMain.bSaveAssetsClick(Sender: TObject);
   var f, i, n: cardinal;
+      d: integer;
       w: word;
       Asset: pAsset;
 begin
@@ -392,8 +394,12 @@ begin
   WriteFile(f, w, 2, n, nil);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
-    if (Asset.Flags and 1) = 0 then
+    if (Asset.Flags and 1) = 0 then begin
       WriteFile(f, Asset.Data[0], Length(Asset.Data), n, nil);
+      d := Asset.FixLen - Length(Asset.Data);
+      if d > 0 then
+        SetFilePointer(f, d, nil, FILE_CURRENT);
+    end;
   end;
   CloseHandle(f);
 end;
@@ -416,6 +422,7 @@ begin
     WriteFile(f, Asset.Data[0], Length(Asset.Data), n, nil);
   end;
   CloseHandle(f);
+  Caption := 'Asset Editor - ' + dSave.FileName;
 end;
 
 
@@ -499,6 +506,7 @@ begin
     end;
   end;
   CloseHandle(f);
+  Caption := 'Asset Editor - ' + dOpen.FileName;
 end;
 
 
@@ -506,6 +514,7 @@ procedure TfmMain.bNewDocClick(Sender: TObject);
 begin
   EmptyDoc;
   lbList.Items.Clear;
+  Caption := 'Asset Editor';
 end;
 
 
@@ -798,29 +807,30 @@ begin
 end;
 
 
-procedure TfmMain.HexDump(Asset: pointer);
+procedure TfmMain.HexDump(const Ptr);
   var p, n, m, Bank: integer;
+      Asset: pAsset;
       s: string;
 begin
   Memo.Clear;
-  n := Length(pAsset(Asset).Data);
-  if pAsset(Asset).FixLen <> 0 then m := pAsset(Asset).FixLen
-                               else m := n;
+  Asset := pAsset(ptr);
+  n := Length(Asset.Data);
+  if Asset.FixLen <> 0 then m := Asset.FixLen
+                       else m := n;
   p := 0;
   s := '';
+  Bank := seBank.Value;
 
   while p <> m do begin
-    if (p and $0F) = 0 then s := s + IntToHex(pAsset(Asset).Addr + p, 4) + ': ';
-    if p < n then s := s + ' ' + IntToHex(pAsset(Asset).Data[p], 2)
+    if (p and $0F) = 0 then
+       if Bank > 0 then s := s + format('%.2x %.4x: ', [Bank + (Asset.Addr + p) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
+                   else s := s + IntToHex(Asset.Addr + p, 4) + ': ';
+    if p < n then s := s + ' ' + IntToHex(Asset.Data[p], 2)
              else s := s + ' 00';
     if (p and $0F) = $F then s := s + #13#10;
     inc(p);
   end;
   Memo.Lines.Text := s;
-
-  Bank := seBank.Value;
-  if Bank > 0 then
-    Memo.Lines.Add(format('%d:%.4x', [Bank + (pAsset(Asset).Addr shr 13), pAsset(Asset).Addr mod 8192 + $A000] ));
 end;
 
 
