@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, XPMan, pngextra, Spin, ExtDlgs,
+  Dialogs, StdCtrls, ExtCtrls, XPMan, pngExtra, pngImage, Spin, ExtDlgs,
   uCommon;
 
 type
@@ -307,13 +307,14 @@ procedure TfmMain.bImpPicClick(Sender: TObject);
   var i, n: integer;
       fn: string;
       bmp: tBitmap;
+      png: TPNGObject;
       Pic: pPicture;
       Pal: pPalette;
+
+      WinPal: tWinPalette;
+      r, g, b: cardinal;
 begin
   if not dOpenPicture.Execute then exit;
-
-  bmp := tBitmap.Create;
-  bmp.LoadFromFile(dOpenPicture.FileName);
   fn := ExtractFileName(dOpenPicture.FileName);
   Delete(fn, Length(fn) - 3, 4);
 
@@ -321,28 +322,63 @@ begin
   FillChar(Pic^, Sizeof(Pic^), 0);
   Pic.Name := fn + '_Pic';
   Pic.Kind := atPicture;
-  Pic.W    := bmp.Width;
-  Pic.H    := bmp.Height;
-  //Pic.BPP  := GetPicBpp(bmp.PixelFormat);
-  if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
-  if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
-  SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
-  lbList.AddItem(Pic.Name, tObject(Pic));
-  n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
-  for i := 0 to Pic.H - 1 do
-    Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
 
   New(Pal);
   FillChar(Pal^, Sizeof(Pal^), 0);
   Pal.Name  := fn + '_Pal';
   Pal.Kind  := atPalette;
   Pal.vAddr := $1FA00;
-  Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
-  SetLength(Pal.Data, 2 * Pal.Count);
-  ExtarctPal(bmp, Pal.Data);
-  lbList.AddItem(Pal.Name, tObject(Pal));
 
-  bmp.Free;
+  if ExtractFileExt(dOpenPicture.FileName) = '.bmp' then begin
+    bmp := tBitmap.Create;
+    bmp.LoadFromFile(dOpenPicture.FileName);
+
+    Pic.W    := bmp.Width;
+    Pic.H    := bmp.Height;
+    if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
+    if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
+    SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
+    n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
+    for i := 0 to Pic.H - 1 do
+      Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
+
+    Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
+    SetLength(Pal.Data, 2 * Pal.Count);
+    ExtarctPal(bmp, Pal.Data);
+
+    bmp.Free;
+  end else begin  // PNG
+    png := TPNGObject.Create;
+    png.LoadFromFile(dOpenPicture.FileName);
+
+    Pic.W    := png.Width;
+    Pic.H    := png.Height;
+    if png.Header.BitDepth = 8 then Pic.Mode := 0;
+    if png.Header.BitDepth = 4 then Pic.Mode := 1;
+    n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;  //bytes per row
+    SetLength(Pic.Data, Pic.H * n);
+    //CopyMemory(@Pic.Data[0], png.Scanline[0], n);
+    //Move(@(png.Scanline[0]), Pic.Data[0], n);
+    for i := 0 to Pic.H - 1 do
+      Move(png.ScanLine[i]^, Pic.Data[n * i], n);
+
+    Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
+    SetLength(Pal.Data, 2 * Pal.Count);
+    FillChar(WinPal[0], SizeOf(WinPal), 0);
+    GetPaletteEntries(png.Palette, 0, Pal.Count, WinPal);
+    //GetDIBColorTable(png.Canvas.Handle, 0, Pal.Count, WinPal);
+    for i := 0 to Pal.Count - 1 do begin
+      r := WinPal[i].R shr 4;
+      g := WinPal[i].G shr 4;
+      b := WinPal[i].B shr 4;
+      pWord(@Pal.Data[2*i])^ := r shl 8 + g shl 4 + b;
+    end;
+
+    png.Free;
+  end;
+
+  lbList.AddItem(Pic.Name, tObject(Pic));
+  lbList.AddItem(Pal.Name, tObject(Pal));
   Pic.Link := lbList.Count;
 end;
 

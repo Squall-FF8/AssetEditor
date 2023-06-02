@@ -20,6 +20,15 @@ const
 
 
 type
+     // Palette related
+  tWinPalEntry = record
+    case byte of
+      0: (R, G, B, A: byte);
+      1: (Color: TColor);
+  end;
+  tWinPalette = array[0..255] of tWinPalEntry;
+
+
   tAssetName = string[50];
   tData = array of byte;
 
