@@ -1,7 +1,7 @@
 unit uCommon;
 
 interface
-uses Windows, Classes, Graphics;
+uses Windows, Classes, Graphics, StdCtrls, pngimage;
 
 const
   cTransCol = clBtnFace;
@@ -27,6 +27,9 @@ type
       1: (Color: TColor);
   end;
   tWinPalette = array[0..255] of tWinPalEntry;
+
+  tScanLine = array[0..1] of byte;
+  pScanLine = ^tScanLine;
 
 
   tAssetName = string[50];
@@ -189,6 +192,26 @@ const
 var
   id: integer = -1;
 
+  // globl var to simplify the imports
+  fn: string;
+  W, H, BPP: integer;
+  Start, Delta: integer;
+  List: tListBox;
+  WinPal: tWinPalette;
+  png: tPNGObject;
+  bmp: tBitmap;
+
+  Spr: pSprite;
+  Pic: pPicture;
+  Pal: pPalette;
+
+  // for ImportOption:
+  indStart,
+  indInsert,
+  ColCount,
+  Link: integer;
+
+
 
 //procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0; Bank: integer = 0);
 procedure HexDumpInClipBoard(const Data: tData);
@@ -208,6 +231,16 @@ function ModeToCols(Mode: byte): integer;
 // Imports
 procedure Import4bpTile(const bmp: tBitmap; Pic: pPicture);
 procedure Import4bpTile16(const bmp: tBitmap; Pic: pPicture);
+
+procedure LoadPNG(const FileName: string);
+procedure LoadBMP(const FileName: string);
+function  BadBPP: boolean;
+function  BadSize: boolean;
+procedure GetPalette(var Data: tData);
+procedure NewSprite;
+
+procedure ImportSprite;
+procedure ImportSprite2;
 
 
 implementation
@@ -366,5 +399,168 @@ begin
         inc(Src);
       end;
 end;
+
+
+
+procedure LoadPNG(const FileName: string);
+begin
+  png.LoadFromFile(FileName);
+  W := png.Width;
+  H := png.Height;
+  BPP := png.Header.BitDepth;
+  Start := integer(png.ScanLine[0]);
+  Delta := integer(png.ScanLine[1]) - integer(png.ScanLine[0]);
+
+  fn := ExtractFileName(FileName);
+  Delete(fn, Length(fn) - 3, 4);
+
+  FillChar(WinPal[0], SizeOf(WinPal), 0);
+  GetPaletteEntries(png.Palette, 0, 1 shl BPP, WinPal);
+end;
+
+procedure LoadBMP(const FileName: string);
+begin
+  bmp.LoadFromFile(FileName);
+  W := bmp.Width;
+  H := bmp.Height;
+  BPP := 0;
+  if bmp.PixelFormat = pf8bit then BPP := 8;
+  if bmp.PixelFormat = pf4bit then BPP := 4;
+  Start := integer(bmp.ScanLine[0]);
+  Delta := integer(bmp.ScanLine[1]) - integer(bmp.ScanLine[0]);
+
+  fn := ExtractFileName(FileName);
+  Delete(fn, Length(fn) - 3, 4);
+
+  FillChar(WinPal[0], SizeOf(WinPal), 0);
+  GetPaletteEntries(bmp.Palette, 0, 1 shl BPP, WinPal);
+end;
+
+
+function BadBPP: boolean;
+begin
+  Result := not (BPP in [4, 8]);
+  if Result then
+    ShowMessage('Unsupported pixel format. Please use only 4bpp or 8 bpp');
+end;
+
+function BadSize: boolean;
+begin
+  Result := (W > 64) or (H > 64);
+  if Result then
+    ShowMessage('Height and Width can be max 64 pixels');
+end;
+
+procedure GetPalette(var Data: tData);
+  var i, n: integer;
+      r, g, b: cardinal;
+begin
+  n := Length(Data) shr 1;
+  for i := 0 to n - 1 do begin
+    r := WinPal[i].R shr 4;
+    g := WinPal[i].G shr 4;
+    b := WinPal[i].B shr 4;
+    pWord(@Data[2*i])^ := r shl 8 + g shl 4 + b;
+  end;
+end;
+
+procedure NewSprite;
+begin
+  New(Spr);
+  FillChar(Spr^, Sizeof(Spr^), 0);
+  Spr.Name := fn + '_Spr';
+  Spr.Kind := atSprite;
+  Spr.vAddr := $F5000;
+  Spr.W    := GetSprMetric(W);
+  Spr.H    := GetSprMetric(H);
+  Spr.BPP  := ord( BPP = 8 );
+  Spr.Z    := 3;
+  SetLength(Spr.Data, 8);
+  List.AddItem(Spr.Name, tObject(Spr));
+end;
+
+
+
+procedure ImportSprite;
+  var i, n, m: integer;
+      Spr: pSprite;
+      Pic: pPicture;
+      Pal: pPalette;
+begin
+  New(Spr);
+  FillChar(Spr^, Sizeof(Spr^), 0);
+  Spr.Name := fn + '_Spr';
+  Spr.Kind := atSprite;
+  Spr.vAddr := $F5000;
+  Spr.W    := GetSprMetric(W);
+  Spr.H    := GetSprMetric(H);
+  Spr.BPP  := ord( BPP = 8 );
+  Spr.Z    := 3;
+  SetLength(Spr.Data, 8);
+  List.AddItem(Spr.Name, tObject(Spr));
+
+  New(Pic);
+  FillChar(Pic^, Sizeof(Pic^), 0);
+  Pic.Name := fn + '_Pic';
+  Pic.Kind := atPicture;
+  Pic.W    := 1 shl (Spr.W + 3);
+  Pic.H    := 1 shl (Spr.H + 3);
+  Pic.Mode := ord(BPP = 4);
+  n := (Pic.W * BPP) shr 3;
+  m := (W * BPP) shr 3;
+  SetLength(Pic.Data, Pic.H * n);
+  for i := 0 to H - 1 do
+    //Move(bmp.ScanLine[i]^, Pic.Data[n * i], m);
+    Move( pointer(Start + i* Delta)^, Pic.Data[n * i], m);
+  List.AddItem(Pic.Name, tObject(Pic));
+
+  New(Pal);
+  FillChar(Pal^, Sizeof(Pal^), 0);
+  Pal.Name  := fn + '_Pal';
+  Pal.Kind  := atPalette;
+  Pal.vAddr := $1FA00;
+  Pal.Count := 1 shl BPP;
+  SetLength(Pal.Data, 2 * Pal.Count);
+  GetPalette(Pal.Data);
+  List.AddItem(Pal.Name, tObject(Pal));
+
+  Spr.Link := List.Count - 1;
+  Pic.Link := List.Count;
+end;
+
+
+procedure ImportSprite2;
+  var i, j, n: integer;
+      r, g, b: cardinal;
+begin
+  NewSprite;
+
+  New(Pic);
+  FillChar(Pic^, Sizeof(Pic^), 0);
+  Pic.Name := fn + '_Pic';
+  Pic.Kind := atPicture;
+  Pic.Link := Link;
+  Pic.W    := 1 shl (Spr.W + 3);
+  Pic.H    := 1 shl (Spr.H + 3);
+  Pic.Mode := ord(BPP = 4);
+
+  n := (Pic.W * BPP) shr 3;
+  SetLength(Pic.Data, Pic.H * n);
+  for j := 0 to H - 1 do
+    for i := 0 to W - 1 do
+      Pic.Data[j*n + i] := pByte(Start + j*Delta + i)^ + indInsert;
+  List.AddItem(Pic.Name, tObject(Pic));
+
+  Pal := pointer(List.Items.Objects[Link - 1]);
+  for i := indStart to ColCount - 1 do begin
+    r := WinPal[i].R shr 4;
+    g := WinPal[i].G shr 4;
+    b := WinPal[i].B shr 4;
+    pWord(@Pal.Data[2*(i + indInsert)])^ := r shl 8 + g shl 4 + b;
+  end;
+
+  Spr.Link := List.Count;
+end;
+
 
 end.

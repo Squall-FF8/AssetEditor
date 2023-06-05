@@ -10,7 +10,8 @@ uses
   uPalette in 'uPalette.pas' {fmPalette},
   uMap in 'uMap.pas' {fmMap},
   uTiles in 'uTiles.pas' {fmTiles},
-  uRAW in 'uRAW.pas' {fmRAW};
+  uRAW in 'uRAW.pas' {fmRAW},
+  uImportOpt in 'uImportOpt.pas' {dlgImportOption};
 
 {$R *.res}
 
@@ -24,5 +25,6 @@ begin
   Application.CreateForm(TfmMap, fmMap);
   Application.CreateForm(TfmTiles, fmTiles);
   Application.CreateForm(TfmRAW, fmRAW);
+  Application.CreateForm(TdlgImportOption, dlgImportOption);
   Application.Run;
 end.

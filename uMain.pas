@@ -50,6 +50,8 @@ type
     bAddRaw: TPNGButton;
     seBank: TSpinEdit;
     Label1: TLabel;
+    bImpPic2: TPNGButton;
+    bImpSprite2: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -77,6 +79,8 @@ type
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure bImpBackgroundClick(Sender: TObject);
     procedure bAddRawClick(Sender: TObject);
+    procedure bImpPic2Click(Sender: TObject);
+    procedure bImpSprite2Click(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -92,17 +96,23 @@ var
 implementation
 {$R *.dfm}
 
-uses uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW;
+uses
+  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW,
+  uImportOpt;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-//
+  List := lbList;
+  png := TPNGObject.Create;
+  bmp := tBitmap.Create;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
   EmptyDoc;
+  png.Free;
+  bmp.Free;
 end;
 
 
@@ -242,7 +252,6 @@ end;
 
 procedure TfmMain.bImpSpriteClick(Sender: TObject);
   var i, n, m: integer;
-      fn: string;
       bmp: tBitmap;
       Spr: pSprite;
       Pic: pPicture;
@@ -250,10 +259,18 @@ procedure TfmMain.bImpSpriteClick(Sender: TObject);
 begin
   if not dOpenPicture.Execute then exit;
 
+  if ExtractFileExt(dOpenPicture.FileName) = '.png' then begin
+    LoadPNG(dOpenPicture.FileName);
+    if BadBPP or BadSize then exit;
+    ImportSprite;
+    exit;
+  end;
+
+
+
+
   bmp := tBitmap.Create;
   bmp.LoadFromFile(dOpenPicture.FileName);
-  fn := ExtractFileName(dOpenPicture.FileName);
-  Delete(fn, Length(fn) - 3, 4);
   if (bmp.PixelFormat <> pf8bit) and (bmp.PixelFormat <> pf4bit) then begin
     ShowMessage('Unsupported pixel format. Please use only 4bpp or 8 bpp');
     exit;
@@ -870,5 +887,112 @@ begin
 end;
 
 
+
+procedure TfmMain.bImpPic2Click(Sender: TObject);
+  var i, j, n: integer;
+      indStart, indInsert, ColCount, Link: integer;
+      fn: string;
+      bmp: tBitmap;
+      png: tPNGObject;
+
+      Asset: pAsset;
+      Pic: pPicture;
+      Pal: pPalette;
+
+      WinPal: tWinPalette;
+      r, g, b: cardinal;
+      Src, Dst: ^byte;
+begin
+  if not dOpenPicture.Execute then exit;
+  fn := ExtractFileName(dOpenPicture.FileName);
+  Delete(fn, Length(fn) - 3, 4);
+
+  with dlgImportOption do begin
+    cbPal.Clear;
+    for i := 0 to lbList.Count - 1 do begin
+      Asset := pAsset(lbList.Items.Objects[i]);
+      if Asset.Kind = atPalette then
+        cbPal.AddItem(Asset.Name, tObject(i + 1));
+    end;
+
+    if ShowModal <> mrOK then exit;
+    Link := integer(cbPal.Items.Objects[cbPal.ItemIndex]);
+    Pal := pointer(lbList.Items.Objects[Link - 1]);
+    indStart  := seStartIndex.Value;
+    indInsert := seInsertIndex.Value;
+    ColCount  := seColorCount.Value;
+  end;
+
+  New(Pic);
+  FillChar(Pic^, Sizeof(Pic^), 0);
+  Pic.Name := fn + '_Pic';
+  Pic.Kind := atPicture;
+  Pic.Link := Link;
+
+  if ExtractFileExt(dOpenPicture.FileName) = '.bmp' then begin
+    bmp := tBitmap.Create;
+    bmp.LoadFromFile(dOpenPicture.FileName);
+
+    Pic.W    := bmp.Width;
+    Pic.H    := bmp.Height;
+    if bmp.PixelFormat = pf8bit then Pic.Mode := 0;
+    if bmp.PixelFormat = pf4bit then Pic.Mode := 1;
+    SetLength(Pic.Data, (Pic.W * Pic.H * cTemplate[Pic.Mode].BPP) shr 3);
+    n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;
+    for i := 0 to Pic.H - 1 do
+      Move(bmp.ScanLine[i]^, Pic.Data[n * i], n);
+
+    Pal.Count := 1 shl cTemplate[Pic.Mode].BPP;
+    SetLength(Pal.Data, 2 * Pal.Count);
+    ExtarctPal(bmp, Pal.Data);
+
+    bmp.Free;
+  end else begin  // PNG
+    png := TPNGObject.Create;
+    png.LoadFromFile(dOpenPicture.FileName);
+
+    Pic.W    := png.Width;
+    Pic.H    := png.Height;
+    Pic.Mode := ord(png.Header.BitDepth = 4);
+    n := (Pic.W * cTemplate[Pic.Mode].BPP) shr 3;  //bytes per row
+    SetLength(Pic.Data, Pic.H * n);
+
+    Dst := @Pic.Data[0];
+    for j := 0 to Pic.H - 1 do begin
+      Src := png.ScanLine[j];
+      for i := 0 to Pic.W - 1 do begin
+        Dst^ := Src^ + indInsert;
+        inc(Src);
+        inc(Dst);
+      end;
+    end;
+
+    FillChar(WinPal[0], SizeOf(WinPal), 0);
+    GetPaletteEntries(png.Palette, 0, 1 shl png.Header.BitDepth, WinPal);
+    for i := indStart to ColCount - 1 do begin
+      r := WinPal[i].R shr 4;
+      g := WinPal[i].G shr 4;
+      b := WinPal[i].B shr 4;
+      pWord(@Pal.Data[2*(i + indInsert)])^ := r shl 8 + g shl 4 + b;
+    end;
+
+    png.Free;
+  end;
+
+  lbList.AddItem(Pic.Name, tObject(Pic));
+end;
+
+
+procedure TfmMain.bImpSprite2Click(Sender: TObject);
+begin
+  if not dOpenPicture.Execute then exit;
+
+  if ExtractFileExt(dOpenPicture.FileName) = '.png'
+    then LoadPNG(dOpenPicture.FileName)
+    else LoadBMP(dOpenPicture.FileName);
+  if BadBPP or BadSize then exit;
+  if not dlgImportOption.Go then exit;
+  ImportSprite2;
+end;
 
 end.
