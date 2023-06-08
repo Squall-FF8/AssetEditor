@@ -11,6 +11,7 @@ object fmLayer: TfmLayer
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label61: TLabel
@@ -323,19 +324,8 @@ object fmLayer: TfmLayer
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    ItemIndex = 1
     TabOrder = 7
-    Text = '1 Text (256c Fg, 1c Bg)'
     OnChange = ControlChange
-    Items.Strings = (
-      '0 Text (16c Fg/Bg)'
-      '1 Text (256c Fg, 1c Bg)'
-      '2 Tile 2bpp'
-      '3 Tile 4bpp'
-      '4 Tile 8bpp'
-      '5 Bitmap 2bpp'
-      '6 Bitmap 4bpp'
-      '7 Bitmap 8bpp')
   end
   object cbTileW4: TComboBox
     Tag = 5

@@ -45,6 +45,7 @@ type
     cbMapH4: TComboBox;
     cbEnabled4: TCheckBox;
     procedure ControlChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -99,7 +100,14 @@ begin
         fmMain.lbList.Items[fmMain.lbList.ItemIndex] := Lay.Name;
       end;
      2: Lay.Addr := StrToInt('$' + eAddress4.Text);
-     3: Lay.Mode := cbVidMode4.ItemIndex;
+     3: begin
+        Lay.Mode := cbVidMode4.ItemIndex;
+        if Lay.Mode >= 5 then begin
+          Lay.MapH := 0;
+          Lay.MapW := 0;
+          Lay.MapBase := 0;
+        end;
+      end;
      4: Lay.TileH := cbTileH4.ItemIndex;
      5: Lay.TileW := cbTileW4.ItemIndex;
      6: Lay.MapH := cbMapH4.ItemIndex;
@@ -114,6 +122,13 @@ begin
 
   PrepareLayerData(Lay);
   fmMain.HexDump(Lay);
+end;
+
+procedure TfmLayer.FormCreate(Sender: TObject);
+  var i: integer;
+begin
+  for i := 0 to 8 do
+    cbVidMode4.Items.Add(cLayMode[i].Text);
 end;
 
 end.

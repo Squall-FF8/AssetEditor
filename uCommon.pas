@@ -189,6 +189,27 @@ const
   );
 
 
+type
+  tLayerMode = record
+    Text: string;
+    Value: integer;
+  end;
+
+const
+  cLayMode: array[0 .. 8] of tLayerMode = (
+    (Text: 'Text (16c Fg/Bg)';      Value: 0),
+    (Text: 'Text (256c Fg, 1c Bg)'; Value: 8),
+    (Text: 'Tile 2bpp';             Value: 1),
+    (Text: 'Tile 4bpp';             Value: 2),
+    (Text: 'Tile 8bpp';             Value: 3),
+    (Text: 'Bitmap 1bpp';           Value: 4),
+    (Text: 'Bitmap 2bpp';           Value: 5),
+    (Text: 'Bitmap 4bpp';           Value: 6),
+    (Text: 'Bitmap 8bpp';           Value: 7)
+  );
+
+
+
 var
   id: integer = -1;
 
@@ -278,12 +299,11 @@ end;
 
 procedure PrepareLayerData(Layer: pLayer);
 begin
-  Layer.Data[0] := Layer.Enable + Layer.Mode shl 5;
-  Layer.Data[1] := Layer.MapW + Layer.MapH shl 2 + Layer.TileW shl 4 + Layer.TileH shl 5;
-  pWord(@Layer.Data[2])^ := Layer.MapBase shr 2;
-  pWord(@Layer.Data[4])^ := Layer.TileBase shr 2;
-  pWord(@Layer.Data[6])^ := Layer.ScrollH;
-  pWord(@Layer.Data[8])^ := Layer.ScrollV;
+  Layer.Data[0] := Layer.MapH shl 6 + Layer.MapW shl 4 + cLayMode[Layer.Mode].Value;
+  Layer.Data[1] := Layer.MapBase shr 9;
+  Layer.Data[2] := (Layer.TileBase shr 11) shl 2 + Layer.TileH shl 1 + Layer.TileW;
+  pWord(@Layer.Data[3])^ := Layer.ScrollH and $FFF;
+  pWord(@Layer.Data[5])^ := Layer.ScrollV and $FFF;
 end;
 
 procedure PasDump(Lines: tStrings; Asset: pAsset);

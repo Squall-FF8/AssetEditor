@@ -179,7 +179,7 @@ begin
   Layer.Name := 'NewLayer';
   Layer.Kind := atLayer;
   Layer.vAddr := $F2000;
-  SetLength(Layer.Data, 10);
+  SetLength(Layer.Data, 7);
 
   lbList.AddItem(Layer.Name, tObject(Layer));
 end;

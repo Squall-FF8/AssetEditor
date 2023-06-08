@@ -487,7 +487,6 @@ object fmMain: TfmMain
       Width = 35
       Height = 35
       Hint = 'New Layer'
-      Visible = False
       ButtonLayout = pbsImageAbove
       ImageNormal.Data = {
         89504E470D0A1A0A0000000D4948445200000020000000200804000000D973B2
