@@ -704,7 +704,7 @@ object fmMain: TfmMain
       Width = 41
       Height = 22
       MaxValue = 255
-      MinValue = 0
+      MinValue = -1
       TabOrder = 1
       Value = 0
     end

@@ -876,7 +876,7 @@ begin
 
   while p <> m do begin
     if (p and $0F) = 0 then
-       if Bank > 0 then s := s + format('%.2x %.4x: ', [Bank + (Asset.Addr + p) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
+       if Bank >=0 then s := s + format('%.2x %.4x: ', [Bank + (Asset.Addr + p - $A000) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
                    else s := s + IntToHex(Asset.Addr + p, 4) + ': ';
     if p < n then s := s + ' ' + IntToHex(Asset.Data[p], 2)
              else s := s + ' 00';

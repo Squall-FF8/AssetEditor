@@ -21,6 +21,7 @@ type
     bOK: TPNGButton;
     bCancel: TPNGButton;
     cbPal: TComboBox;
+    cbTransparency: TCheckBox;
     procedure bOKClick(Sender: TObject);
     procedure bCancelClick(Sender: TObject);
   private
@@ -59,6 +60,7 @@ begin
     indStart  := seStartIndex.Value;
     indInsert := seInsertIndex.Value;
     ColCount  := seColorCount.Value;
+    Transparency := cbTransparency.Checked;
   end;
 end;
 

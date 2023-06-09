@@ -3,7 +3,7 @@ object dlgImportOption: TdlgImportOption
   Top = 125
   BorderStyle = bsDialog
   Caption = 'Please, select options:'
-  ClientHeight = 245
+  ClientHeight = 253
   ClientWidth = 328
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,7 +14,7 @@ object dlgImportOption: TdlgImportOption
   OldCreateOrder = False
   DesignSize = (
     328
-    245)
+    253)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -73,7 +73,7 @@ object dlgImportOption: TdlgImportOption
   end
   object Bevel1: TBevel
     Left = 0
-    Top = 208
+    Top = 216
     Width = 328
     Height = 37
     Anchors = [akLeft, akRight, akBottom]
@@ -81,7 +81,7 @@ object dlgImportOption: TdlgImportOption
   end
   object bOK: TPNGButton
     Left = 56
-    Top = 216
+    Top = 224
     Width = 81
     Height = 23
     ButtonLayout = pbsImageLeft
@@ -91,7 +91,7 @@ object dlgImportOption: TdlgImportOption
   end
   object bCancel: TPNGButton
     Left = 168
-    Top = 214
+    Top = 224
     Width = 81
     Height = 23
     ButtonLayout = pbsImageLeft
@@ -146,5 +146,21 @@ object dlgImportOption: TdlgImportOption
     Height = 21
     ItemHeight = 13
     TabOrder = 3
+  end
+  object cbTransparency: TCheckBox
+    Left = 48
+    Top = 176
+    Width = 257
+    Height = 17
+    Caption = 'Keep transparency? Color 0 will stay 0'
+    Checked = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    State = cbChecked
+    TabOrder = 4
   end
 end

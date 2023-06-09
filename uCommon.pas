@@ -231,6 +231,7 @@ var
   indInsert,
   ColCount,
   Link: integer;
+  Transparency: boolean;
 
 
 
@@ -552,6 +553,7 @@ end;
 procedure ImportSprite2;
   var i, j, n: integer;
       r, g, b: cardinal;
+      c: byte;
 begin
   NewSprite;
 
@@ -567,8 +569,11 @@ begin
   n := (Pic.W * BPP) shr 3;
   SetLength(Pic.Data, Pic.H * n);
   for j := 0 to H - 1 do
-    for i := 0 to W - 1 do
-      Pic.Data[j*n + i] := pByte(Start + j*Delta + i)^ + indInsert;
+    for i := 0 to W - 1 do begin
+      c := pByte(Start + j*Delta + i)^ ;
+      if Transparency and (c=0) then Pic.Data[j*n + i] := 0
+                                else Pic.Data[j*n + i] := c + indInsert;
+    end;
   List.AddItem(Pic.Name, tObject(Pic));
 
   Pal := pointer(List.Items.Objects[Link - 1]);
