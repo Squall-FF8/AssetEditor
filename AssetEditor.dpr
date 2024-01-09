@@ -11,7 +11,8 @@ uses
   uMap in 'uMap.pas' {fmMap},
   uTiles in 'uTiles.pas' {fmTiles},
   uRAW in 'uRAW.pas' {fmRAW},
-  uImportOpt in 'uImportOpt.pas' {dlgImportOption};
+  uImportOpt in 'uImportOpt.pas' {dlgImportOption},
+  uText in 'uText.pas' {fmText};
 
 {$R *.res}
 
@@ -26,5 +27,6 @@ begin
   Application.CreateForm(TfmTiles, fmTiles);
   Application.CreateForm(TfmRAW, fmRAW);
   Application.CreateForm(TdlgImportOption, dlgImportOption);
+  Application.CreateForm(TfmText, fmText);
   Application.Run;
 end.

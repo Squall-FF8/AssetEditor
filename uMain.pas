@@ -52,6 +52,7 @@ type
     Label1: TLabel;
     bImpPic2: TPNGButton;
     bImpSprite2: TPNGButton;
+    bAddText: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -81,6 +82,7 @@ type
     procedure bAddRawClick(Sender: TObject);
     procedure bImpPic2Click(Sender: TObject);
     procedure bImpSprite2Click(Sender: TObject);
+    procedure bAddTextClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -97,7 +99,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW,
+  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW, uText,
   uImportOpt;
 
 
@@ -199,6 +201,20 @@ begin
 end;
 
 
+procedure TfmMain.bAddTextClick(Sender: TObject);
+  var Text: pText;
+begin
+  New(Text);
+  FillChar(Text^, Sizeof(Text^), 0);
+  Text.Name := 'NewTexts';
+  Text.Kind := atText;
+  Text.vAddr := $0;
+  SetLength(Text.Data, 0);
+
+  lbList.AddItem(Text.Name, tObject(Text));
+end;
+
+
 procedure TfmMain.lbListClick(Sender: TObject);
 begin
   id := lbList.ItemIndex;
@@ -212,6 +228,7 @@ begin
     5: fmMap.SetPointer(lbList.Items.Objects[id]);
     6: fmTiles.SetPointer(lbList.Items.Objects[id]);
     7: fmRAW.SetPointer(lbList.Items.Objects[id]);
+    8: fmText.SetPointer(lbList.Items.Objects[id]);
   end;
 end;
 
@@ -489,6 +506,7 @@ procedure TfmMain.bLoadDocClick(Sender: TObject);
       Map: pMap;
       Tiles: pTile;
       RAW: pAsset;
+      Text: pText;
 begin
   if not dOpen.Execute then exit;
 
@@ -555,6 +573,14 @@ begin
         SetLength(RAW.Data, RAW._Len);
         ReadFile(f, RAW.Data[0], RAW._Len, n, nil);
         lbList.AddItem(RAW.Name, tObject(RAW));
+       end;
+      atText: begin
+        New(Text);
+        ReadFile(f, Text^, SizeOf(tText), n, nil);
+        pCardinal(@Text.Data)^ := 0;
+        SetLength(Text.Data, Text._Len);
+        ReadFile(f, Text.Data[0], Text._Len, n, nil);
+        lbList.AddItem(Text.Name, tObject(Text));
        end;
     end;
   end;
@@ -678,6 +704,7 @@ begin
   fmMap.Setup;
   fmTiles.Setup;
   fmRAW.Setup;
+  fmText.Setup;
 end;
 
 

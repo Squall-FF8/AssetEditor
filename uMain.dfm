@@ -1,7 +1,7 @@
 object fmMain: TfmMain
   Left = 300
   Top = 112
-  Width = 1111
+  Width = 1151
   Height = 606
   Caption = 'Asset Editor'
   Color = clBtnFace
@@ -19,7 +19,7 @@ object fmMain: TfmMain
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1095
+    Width = 1135
     Height = 48
     Align = alTop
     BevelOuter = bvNone
@@ -139,7 +139,7 @@ object fmMain: TfmMain
       OnClick = bAddPaletteClick
     end
     object bImpSprite: TPNGButton
-      Left = 387
+      Left = 427
       Top = 5
       Width = 35
       Height = 35
@@ -174,7 +174,7 @@ object fmMain: TfmMain
       OnClick = bImpSpriteClick
     end
     object bSaveFile: TPNGButton
-      Left = 707
+      Left = 747
       Top = 5
       Width = 35
       Height = 35
@@ -209,14 +209,14 @@ object fmMain: TfmMain
       OnClick = bSaveFileClick
     end
     object Label35: TLabel
-      Left = 912
+      Left = 952
       Top = 4
       Width = 41
       Height = 13
       Caption = 'Address:'
     end
     object bAddr: TPNGButton
-      Left = 954
+      Left = 994
       Top = 20
       Width = 21
       Height = 21
@@ -241,7 +241,7 @@ object fmMain: TfmMain
       OnClick = bAddrClick
     end
     object bSaveAssets: TPNGButton
-      Left = 747
+      Left = 787
       Top = 5
       Width = 35
       Height = 35
@@ -272,7 +272,7 @@ object fmMain: TfmMain
       OnClick = bSaveAssetsClick
     end
     object bGenerateSource: TPNGButton
-      Left = 992
+      Left = 1032
       Top = 9
       Width = 35
       Height = 35
@@ -375,7 +375,7 @@ object fmMain: TfmMain
       OnClick = bNewDocClick
     end
     object bImpPic: TPNGButton
-      Left = 475
+      Left = 515
       Top = 5
       Width = 35
       Height = 35
@@ -411,7 +411,7 @@ object fmMain: TfmMain
       OnClick = bImpPicClick
     end
     object bDelAsset: TPNGButton
-      Left = 811
+      Left = 851
       Top = 5
       Width = 35
       Height = 35
@@ -446,7 +446,7 @@ object fmMain: TfmMain
       OnClick = bDelAssetClick
     end
     object bImpPicTile: TPNGButton
-      Left = 563
+      Left = 603
       Top = 5
       Width = 35
       Height = 35
@@ -482,7 +482,7 @@ object fmMain: TfmMain
       OnClick = bImpPicTileClick
     end
     object bAddLayer: TPNGButton
-      Left = 1035
+      Left = 1075
       Top = 5
       Width = 35
       Height = 35
@@ -519,7 +519,7 @@ object fmMain: TfmMain
       OnClick = bAddLayerClick
     end
     object bImpPicTile16: TPNGButton
-      Left = 603
+      Left = 643
       Top = 5
       Width = 35
       Height = 35
@@ -555,7 +555,7 @@ object fmMain: TfmMain
       OnClick = bImpPicTile16Click
     end
     object bImpBackground: TPNGButton
-      Left = 643
+      Left = 683
       Top = 5
       Width = 35
       Height = 35
@@ -612,14 +612,14 @@ object fmMain: TfmMain
       OnClick = bAddRawClick
     end
     object Label1: TLabel
-      Left = 864
+      Left = 904
       Top = 4
       Width = 28
       Height = 13
       Caption = 'Bank:'
     end
     object bImpPic2: TPNGButton
-      Left = 515
+      Left = 555
       Top = 5
       Width = 35
       Height = 35
@@ -655,7 +655,7 @@ object fmMain: TfmMain
       OnClick = bImpPic2Click
     end
     object bImpSprite2: TPNGButton
-      Left = 427
+      Left = 467
       Top = 5
       Width = 35
       Height = 35
@@ -689,8 +689,40 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = bImpSprite2Click
     end
+    object bAddText: TPNGButton
+      Left = 347
+      Top = 5
+      Width = 35
+      Height = 35
+      Hint = 'New TEXT table asset'
+      ButtonLayout = pbsImageAbove
+      ImageNormal.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+        F4000000097048597300000EC400000EC401952B0E1B000002104944415478DA
+        ED943D4802611CC63B51A10671B168680C42D4062DAAA9E86B0893825A0A4204
+        D12C3168C8A986106AA8441397A445108B109386409AC38FC5888A888A689022
+        450C343F7A2EEE428E2B2232977BE1E5B9E7FFF1FE7FBE9E12E572B9AE968BE0
+        0038000E8003E0009800044194AA3910F3785F02547B381BC40700064BF17C86
+        7D0BDF046D6036592C96B0DD6E6F0F04025B1A8D66153D2E848DD8F94824E252
+        A9540B88EDC24752A9D408DB6083C1F0ECF3F9A6292BC3AC7326C00DFC1DB48B
+        0111D2E974398FC7332093C9428944622A93C9844422513F727EF4CCA4D3E923
+        B158DC073F97CD66350281A019BB836CCEE7F3D142A1F0A8D7EB9FBC5EAFF63B
+        80CA6B2248C527DB88C5620B15A94232993C9148244372B9DC1B0E871BB10671
+        C601726315759738E305DA8D1CDB9BFE3300E45620CB8CE663E48769831BD957
+        2814E364390320019DA806C0679EAA398574324AAA0A90CEE572D742A150451A
+        A552B9198FC72DFF06A0D56AB7F142CED1BE582C9EF2F9FC663CB6FC07C075A9
+        54AA873EF078BC16A7D379603299E6DD6EB7DD68349AFF1AE015B9F54A00ABD5
+        BA64B3D9D61C0EC7B6D96C9E45E80AB50D14EC3DA4E737006D089C7F71032790
+        5E2A9CC2F7BD138D461711BF826F25836AB5FA30180C8E22E6270752B54F3843
+        429DC1062045FE82061040DF6AF657FC690882A4F7D3757F3C97FED94E62E61E
+        2B402D1607C0017000EFF6FA8BD098E3C02D0000000049454E44AE426082}
+      ButtonStyle = pbsNoFrame
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bAddTextClick
+    end
     object eAddr: TEdit
-      Left = 905
+      Left = 945
       Top = 20
       Width = 49
       Height = 21
@@ -699,7 +731,7 @@ object fmMain: TfmMain
       Text = '0000'
     end
     object seBank: TSpinEdit
-      Left = 864
+      Left = 904
       Top = 20
       Width = 41
       Height = 22
@@ -863,13 +895,13 @@ object fmMain: TfmMain
   object Panel4: TPanel
     Left = 280
     Top = 48
-    Width = 815
+    Width = 855
     Height = 519
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object panEdits: TPanel
-      Left = 564
+      Left = 604
       Top = 0
       Width = 251
       Height = 519
@@ -881,7 +913,7 @@ object fmMain: TfmMain
     object Panel5: TPanel
       Left = 0
       Top = 0
-      Width = 564
+      Width = 604
       Height = 519
       Align = alClient
       BevelOuter = bvNone
@@ -889,7 +921,7 @@ object fmMain: TfmMain
       object Splitter1: TSplitter
         Left = 0
         Top = 335
-        Width = 564
+        Width = 604
         Height = 4
         Cursor = crVSplit
         Align = alBottom
@@ -897,7 +929,7 @@ object fmMain: TfmMain
       object Memo: TMemo
         Left = 0
         Top = 339
-        Width = 564
+        Width = 604
         Height = 180
         Align = alBottom
         BevelInner = bvNone
@@ -913,7 +945,7 @@ object fmMain: TfmMain
       object ScrollBox1: TScrollBox
         Left = 0
         Top = 0
-        Width = 564
+        Width = 604
         Height = 335
         Align = alClient
         BevelInner = bvNone

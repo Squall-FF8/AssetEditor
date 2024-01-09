@@ -45,8 +45,6 @@ var
 implementation
 {$R *.dfm}
 
-uses uPicture;
-
 
 procedure TfmRAW.Setup;
 begin

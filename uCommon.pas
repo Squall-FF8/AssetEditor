@@ -13,6 +13,7 @@ const
   atMap     = 5;
   atTile    = 6;
   atRaw     = 7;
+  atText    = 8;
 
   // Picture Modes
   //pmLinear = 0;
@@ -162,11 +163,14 @@ type
   end;
   pMap = ^tMap;
 
+  tText = tAsset;
+  pText = ^tText;
+
 
 const
-  cKindLen: array[1 .. 7] of integer =
-    (SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
-     SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset) );
+  cKindLen: array[1 .. 8] of integer = (
+    SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
+    SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset), SizeOf(tText) );
 
 
 type
