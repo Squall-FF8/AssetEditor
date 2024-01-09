@@ -23,14 +23,12 @@ type
     bMoveDown: TPNGButton;
     bMoveUp: TPNGButton;
     bDelete: TPNGButton;
-    bRefresh: TPNGButton;
     procedure ControlChange(Sender: TObject);
     procedure eTextKeyPress(Sender: TObject; var Key: Char);
     procedure lbTextClick(Sender: TObject);
     procedure bDeleteClick(Sender: TObject);
     procedure bMoveDownClick(Sender: TObject);
     procedure bMoveUpClick(Sender: TObject);
-    procedure bRefreshClick(Sender: TObject);
   private
     procedure Refresh;
   public
@@ -67,7 +65,7 @@ begin
   eFixedLen.Text     := IntToHex(Text.FixLen, 4);
 
   lbText.Clear;
-  i := 0;
+  i := 2 * Text.Num;
   while i < length(Text.Data) do begin
     n := i;
     while Text.Data[n] <> 0 do inc(n);
@@ -155,21 +153,24 @@ begin
 end;
 
 
-procedure TfmText.bRefreshClick(Sender: TObject);
-begin
-  Refresh
-end;
-
-
 procedure TfmText.Refresh;
-  var i, n, l, len: integer;
+  var i, n, l, len, addr: integer;
 begin
-  len := 0;
-  for i := 0 to lbText.Count - 1 do
-    inc(len, length(lbText.Items[i]) + 1);
+  Text.Num := lbText.Count;
+  len := Text.Num * 2;
   SetLength(Text.Data, len);
 
-  n := 0;
+  addr := Text.Addr + len;
+  for i := 0 to Text.Num - 1 do begin
+    Text.Data[i] := addr and $FF;
+    Text.Data[Text.Num + i] := addr shr 8;
+    l := length(lbText.Items[i]) + 1;
+    inc(len, l);
+    inc(addr, l);
+  end;
+  SetLength(Text.Data, len);
+
+  n := 2 * Text.Num;
   for i := 0 to lbText.Count - 1 do begin
     l := length(lbText.Items[i]) + 1;  // it seems Delphi adds #0 at the end of strings
     Move(lbText.Items[i][1], Text.Data[n], l);

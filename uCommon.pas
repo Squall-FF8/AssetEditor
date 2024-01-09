@@ -163,7 +163,19 @@ type
   end;
   pMap = ^tMap;
 
-  tText = tAsset;
+  tText = record
+    Kind: byte;
+    Flags: byte;
+    _Len: integer;
+    Name: tAssetName;
+    Addr: integer;
+    vAddr: integer;
+    Data: tData;
+    Link: integer;
+    FixLen: integer;
+
+    Num:  integer;
+  end;
   pText = ^tText;
 
 
