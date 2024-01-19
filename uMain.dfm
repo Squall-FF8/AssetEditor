@@ -272,11 +272,12 @@ object fmMain: TfmMain
       OnClick = bSaveAssetsClick
     end
     object bGenerateSource: TPNGButton
-      Left = 1032
+      Left = 824
       Top = 9
       Width = 35
       Height = 35
       Hint = 'Generate Source Code (in Pascal)'
+      Visible = False
       ButtonLayout = pbsImageAbove
       Caption = 'PAS'
       ButtonStyle = pbsFlat
@@ -720,6 +721,19 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bAddTextClick
+    end
+    object bGenerateASM: TPNGButton
+      Left = 1032
+      Top = 9
+      Width = 35
+      Height = 35
+      Hint = 'Generate Source Code (in Assembler)'
+      ButtonLayout = pbsImageAbove
+      Caption = 'ASM'
+      ButtonStyle = pbsFlat
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bGenerateASMClick
     end
     object eAddr: TEdit
       Left = 945

@@ -53,6 +53,7 @@ type
     bImpPic2: TPNGButton;
     bImpSprite2: TPNGButton;
     bAddText: TPNGButton;
+    bGenerateASM: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -83,6 +84,7 @@ type
     procedure bImpPic2Click(Sender: TObject);
     procedure bImpSprite2Click(Sender: TObject);
     procedure bAddTextClick(Sender: TObject);
+    procedure bGenerateASMClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -586,6 +588,11 @@ begin
   end;
   CloseHandle(f);
   Caption := 'Asset Editor - ' + dOpen.FileName;
+
+  m := pAsset(lbList.Items.Objects[0]).Addr;
+  eAddr.Text := IntToHex(m, 4);
+  if (m >=$A000) and (m < $C000) then seBank.Value := 0
+                                 else seBank.Value := -1;
 end;
 
 
@@ -1020,6 +1027,18 @@ begin
   if BadBPP or BadSize then exit;
   if not dlgImportOption.Go then exit;
   ImportSprite2;
+end;
+
+procedure TfmMain.bGenerateASMClick(Sender: TObject);
+  var i: integer;
+      Asset: pAsset;
+begin
+  Memo.Clear;
+  for i := 0 to lbList.Count - 1 do begin
+    Asset := pAsset(lbList.Items.Objects[i]);
+    Memo.Lines.Add( format('%s = $%.4x;',
+      [Asset.Name, Asset.Addr]) );
+  end;
 end;
 
 end.
