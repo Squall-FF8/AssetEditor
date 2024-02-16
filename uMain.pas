@@ -43,7 +43,7 @@ type
     Panel5: TPanel;
     Memo: TMemo;
     Splitter1: TSplitter;
-    ScrollBox1: TScrollBox;
+    ImageBox: TScrollBox;
     Image: TImage;
     bImpPicTile16: TPNGButton;
     bImpBackground: TPNGButton;
@@ -54,6 +54,8 @@ type
     bImpSprite2: TPNGButton;
     bAddText: TPNGButton;
     bGenerateASM: TPNGButton;
+    bAddZSM: TPNGButton;
+    TextBox: TMemo;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -85,6 +87,7 @@ type
     procedure bImpSprite2Click(Sender: TObject);
     procedure bAddTextClick(Sender: TObject);
     procedure bGenerateASMClick(Sender: TObject);
+    procedure bAddZSMClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -101,7 +104,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW, uText,
+  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW, uText, uZSM,
   uImportOpt;
 
 
@@ -110,6 +113,7 @@ begin
   List := lbList;
   png := TPNGObject.Create;
   bmp := tBitmap.Create;
+  TextBox.Align := alClient;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
@@ -218,19 +222,25 @@ end;
 
 
 procedure TfmMain.lbListClick(Sender: TObject);
+  var Asset: pAsset;
 begin
   id := lbList.ItemIndex;
   if id < 0 then exit;
 
-  case pAsset(lbList.Items.Objects[id]).Kind of
-    1: fmSprite.SetPointer(lbList.Items.Objects[id]);
-    2: fmPicture.SetPointer(lbList.Items.Objects[id]);
-    3: fmPalette.SetPointer(lbList.Items.Objects[id]);
-    4: fmLayer.SetPointer(lbList.Items.Objects[id]);
-    5: fmMap.SetPointer(lbList.Items.Objects[id]);
-    6: fmTiles.SetPointer(lbList.Items.Objects[id]);
-    7: fmRAW.SetPointer(lbList.Items.Objects[id]);
-    8: fmText.SetPointer(lbList.Items.Objects[id]);
+  Asset := pAsset(lbList.Items.Objects[id]);
+  ImageBox.Visible := (Asset.Flags and Flag_TextBox) = 0;
+  TextBox.Visible  := (Asset.Flags and Flag_TextBox) > 0;
+
+  case Asset.Kind of
+    1: fmSprite.SetPointer(Asset);
+    2: fmPicture.SetPointer(Asset);
+    3: fmPalette.SetPointer(Asset);
+    4: fmLayer.SetPointer(Asset);
+    5: fmMap.SetPointer(Asset);
+    6: fmTiles.SetPointer(Asset);
+    7: fmRAW.SetPointer(Asset);
+    8: fmText.SetPointer(Asset);
+    9: fmZSM.SetPointer(Asset);
   end;
 end;
 
@@ -712,6 +722,7 @@ begin
   fmTiles.Setup;
   fmRAW.Setup;
   fmText.Setup;
+  fmZSM.Setup;
 end;
 
 
@@ -1039,6 +1050,20 @@ begin
     Memo.Lines.Add( format('%s = $%.4x;',
       [Asset.Name, Asset.Addr]) );
   end;
+end;
+
+procedure TfmMain.bAddZSMClick(Sender: TObject);
+  var ZSM: pZSM;
+begin
+  New(ZSM);
+  FillChar(ZSM^, Sizeof(ZSM^), 0);
+  ZSM.Name := 'New ZSM';
+  ZSM.Kind := atZSM;
+  ZSM.vAddr := $0;
+  ZSM.Flags := Flag_TextBox;
+  SetLength(ZSM.Data, 0);
+
+  lbList.AddItem(ZSM.Name, tObject(ZSM));
 end;
 
 end.

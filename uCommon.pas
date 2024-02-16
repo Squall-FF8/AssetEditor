@@ -14,10 +14,17 @@ const
   atTile    = 6;
   atRaw     = 7;
   atText    = 8;
+  atZSM     = 9;
 
   // Picture Modes
   //pmLinear = 0;
   //pmTiles  = 1;
+
+  // Flag bits:
+  //  bit0: 0 - export asset, 1 - do not export
+  //  bit1: 0 - use ImageBox, 1 - use TextBox
+  Flag_NoExport = 1;
+  Flag_TextBox  = 2;
 
 
 type
@@ -37,7 +44,7 @@ type
   tData = array of byte;
 
   tAsset = record
-    Kind:   byte;
+    Kind:   byte;  // bits: 0-no export; 1-TextBox
     Flags:  byte;
     _Len:   integer;
     Name:   tAssetName;
@@ -178,11 +185,26 @@ type
   end;
   pText = ^tText;
 
+  tZSM = record
+    Kind: byte;
+    Flags: byte;
+    _Len: integer;
+    Name: tAssetName;
+    Addr: integer;
+    vAddr: integer;
+    Data: tData;
+    Link: integer;
+    FixLen: integer;
+
+    Loop:  integer;
+  end;
+  pZSM = ^tZSM;
+
 
 const
-  cKindLen: array[1 .. 8] of integer = (
+  cKindLen: array[1 .. 9] of integer = (
     SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
-    SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset), SizeOf(tText) );
+    SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset), SizeOf(tText), SizeOf(tZSM) );
 
 
 type
