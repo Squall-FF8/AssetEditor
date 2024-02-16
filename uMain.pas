@@ -1043,14 +1043,26 @@ begin
 end;
 
 procedure TfmMain.bGenerateASMClick(Sender: TObject);
-  var i: integer;
+  var i, Bank: integer;
       Asset: pAsset;
+
+  function FormatAddress(Addr: integer): string;
+    var n: integer;
+  begin
+    if Addr < $A000 then Result := IntToHex(Addr, 4)
+    else begin
+      n := Addr - $A000;
+      Result := format('$%d%.4x', [Bank + n div 8192, $A000 + n mod 8192]);
+    end;
+  end;
+
 begin
+  Bank := seBank.Value;
   Memo.Clear;
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
-    Memo.Lines.Add( format('%s = $%.4x;',
-      [Asset.Name, Asset.Addr]) );
+    Memo.Lines.Add( format('%s = %s',
+      [Asset.Name, FormatAddress(Asset.Addr)]) );
   end;
 end;
 
