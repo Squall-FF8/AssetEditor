@@ -447,24 +447,26 @@ end;
 
 
 procedure TfmMain.bAddrClick(Sender: TObject);
-  var i, p: integer;
+  var i, p, a: integer;
       Asset: pAsset;
 begin
   p := StrToInt('$' + eAddr.Text);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
     if (Asset.Flags and 1) = 0 then begin
-      Asset.Addr := p;
-      if Asset.FixLen = 0 then inc(p, Length(Asset.Data))
-                          else inc(p, Asset.FixLen);
+      a := Asset.FixLen;
+      if a <> 0 then
+        a := a - p mod a;
+      Asset.Addr := p + a;
+      inc(p, Length(Asset.Data) + a);
     end;
   end;
 end;
 
 
 procedure TfmMain.bSaveAssetsClick(Sender: TObject);
-  var f, i, n: cardinal;
-      d: integer;
+  var f, i, n, a: cardinal;
+      //a: integer;
       w: word;
       Asset: pAsset;
 begin
@@ -477,10 +479,13 @@ begin
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
     if (Asset.Flags and 1) = 0 then begin
+      a := Asset.FixLen;
+      if a <> 0 then begin
+        a := a - GetFileSize(f, nil) mod a;
+        SetFilePointer(f, a, nil, FILE_CURRENT);
+      end;
+
       WriteFile(f, Asset.Data[0], Length(Asset.Data), n, nil);
-      d := Asset.FixLen - Length(Asset.Data);
-      if d > 0 then
-        SetFilePointer(f, d, nil, FILE_CURRENT);
     end;
   end;
   CloseHandle(f);
@@ -906,25 +911,22 @@ end;
 
 
 procedure TfmMain.HexDump(const Ptr);
-  var p, n, m, Bank: integer;
+  var p, n, Bank: integer;
       Asset: pAsset;
       s: string;
 begin
   Memo.Clear;
   Asset := pAsset(ptr);
   n := Length(Asset.Data);
-  if Asset.FixLen <> 0 then m := Asset.FixLen
-                       else m := n;
   p := 0;
   s := '';
   Bank := seBank.Value;
 
-  while p <> m do begin
+  while p <> n do begin
     if (p and $0F) = 0 then
        if Bank >=0 then s := s + format('%.2x %.4x: ', [Bank + (Asset.Addr + p - $A000) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
                    else s := s + IntToHex(Asset.Addr + p, 4) + ': ';
-    if p < n then s := s + ' ' + IntToHex(Asset.Data[p], 2)
-             else s := s + ' 00';
+    s := s + ' ' + IntToHex(Asset.Data[p], 2);
     if (p and $0F) = $F then s := s + #13#10;
     inc(p);
   end;
