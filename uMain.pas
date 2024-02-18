@@ -481,7 +481,7 @@ begin
     if (Asset.Flags and 1) = 0 then begin
       a := Asset.FixLen;
       if a <> 0 then begin
-        a := a - GetFileSize(f, nil) mod a;
+        a := a - (GetFileSize(f, nil) - 2) mod a;
         SetFilePointer(f, a, nil, FILE_CURRENT);
       end;
 
