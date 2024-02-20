@@ -208,9 +208,16 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = bSaveFileClick
     end
+    object Label35: TLabel
+      Left = 952
+      Top = 4
+      Width = 41
+      Height = 13
+      Caption = 'Address:'
+    end
     object bAddr: TPNGButton
-      Left = 914
-      Top = 12
+      Left = 994
+      Top = 20
       Width = 21
       Height = 21
       ButtonLayout = pbsImageAbove
@@ -263,6 +270,20 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bSaveAssetsClick
+    end
+    object bGenerateSource: TPNGButton
+      Left = 824
+      Top = 9
+      Width = 35
+      Height = 35
+      Hint = 'Generate Source Code (in Pascal)'
+      Visible = False
+      ButtonLayout = pbsImageAbove
+      Caption = 'PAS'
+      ButtonStyle = pbsFlat
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bGenerateSourceClick
     end
     object bLoadDoc: TPNGButton
       Left = 67
@@ -591,6 +612,13 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = bAddRawClick
     end
+    object Label1: TLabel
+      Left = 904
+      Top = 4
+      Width = 28
+      Height = 13
+      Caption = 'Bank:'
+    end
     object bImpPic2: TPNGButton
       Left = 555
       Top = 5
@@ -693,7 +721,7 @@ object fmMain: TfmMain
       OnClick = bAddTextClick
     end
     object bGenerateASM: TPNGButton
-      Left = 952
+      Left = 1032
       Top = 9
       Width = 35
       Height = 35
@@ -740,6 +768,25 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bAddZSMClick
+    end
+    object eAddr: TEdit
+      Left = 945
+      Top = 20
+      Width = 49
+      Height = 21
+      MaxLength = 6
+      TabOrder = 0
+      Text = '0000'
+    end
+    object seBank: TSpinEdit
+      Left = 904
+      Top = 20
+      Width = 41
+      Height = 22
+      MaxValue = 255
+      MinValue = -1
+      TabOrder = 1
+      Value = 0
     end
   end
   object Panel2: TPanel

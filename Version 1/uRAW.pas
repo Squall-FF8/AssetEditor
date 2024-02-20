@@ -59,7 +59,7 @@ begin
   RAW := Ptr;
 
   eName.Text    := RAW.Name;
-  eAddress.Text := BRAMToStr(RAW.Addr);
+  eAddress.Text := IntToHex(RAW.Addr, 4);
   eVidAddr.Text := IntToHex(RAW.vAddr, 5);
   cbNoExport.Checked := (RAW.Flags and 1) = 1;
   eFixedLen.Text     := IntToHex(RAW.FixLen, 4);
@@ -77,7 +77,7 @@ begin
         RAW.Name := eName.Text;
         fmMain.lbList.Items[fmMain.lbList.ItemIndex] := RAW.Name;
       end;
-     2: RAW.Addr  := StrToBRAM(eAddress.Text);
+     2: RAW.Addr  := StrToInt('$' + eAddress.Text);
      8: RAW.vAddr := StrToInt('$' + eVidAddr.Text);
     13: begin
         RAW.Link := integer(cbPic.Items.Objects[cbPic.ItemIndex]);

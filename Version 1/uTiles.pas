@@ -31,7 +31,7 @@ type
   private
 
   public
-    Tiles: pTile0;
+    Tiles: pTile;
     procedure Setup;
     procedure SetPointer(Ptr: pointer);
     procedure DrawImage;

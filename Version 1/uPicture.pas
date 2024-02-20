@@ -84,7 +84,7 @@ begin
   Pic := Ptr;
 
   eName2.Text         := Pic.Name;
-  eAddress2.Text      := BRAMToStr(Pic.Addr);
+  eAddress2.Text      := IntToHex(Pic.Addr, 4);
   seX2.Value          := Pic.X;
   seY2.Value          := Pic.Y;
   seW2.Value          := Pic.W;
@@ -111,7 +111,7 @@ begin
         Pic.Name := eName2.Text;
         fmMain.lbList.Items[fmMain.lbList.ItemIndex] := Pic.Name;
       end;
-     2: Pic.Addr  := StrToBRAM(eAddress2.Text);
+     2: Pic.Addr  := StrToInt('$' + eAddress2.Text);
      3: Pic.X     := seX2.Value;
      4: Pic.Y     := seY2.Value;
      5: Pic.W     := seW2.Value;

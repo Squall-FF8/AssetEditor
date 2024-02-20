@@ -139,7 +139,7 @@ type
   end;
   pLayer = ^tLayer;
 
-  tTile0 = record
+  tTile = record
     Kind: byte;
     Flags: byte;
     _Len: integer;
@@ -152,7 +152,7 @@ type
 
     Num:  integer;
   end;
-  pTile0 = ^tTile0;
+  pTile = ^tTile;
 
   tMap = record
     Kind: byte;
@@ -204,32 +204,8 @@ type
 const
   cKindLen: array[1 .. 9] of integer = (
     SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
-    SizeOf(tMap), SizeOf(tTile0), SizeOf(tAsset), SizeOf(tText), SizeOf(tZSM) );
+    SizeOf(tMap), SizeOf(tTile), SizeOf(tAsset), SizeOf(tText), SizeOf(tZSM) );
 
-
-  // Header
-type
-  tTriplet = packed record
-    Addr: word;
-    Bank: shortint;  // -1 = no banking (for RAM)
-  end;
-  tMark = array[1..3] of char;
-
-  tHeader = packed record
-    Mark:    tMark;    // AEF
-    Version: byte;     // 2. Version 1 doesnt have header
-    Count:   word;     // number of assets in the file
-    RAM:     tTriplet; // where the assets will be loaded. Used for auto-number
-    VRAM:    tTriplet; // where assets will be copied
-    dummy:   array[1..20] of byte; // reserved for feuture needs. Total size = 32
-  end;
-  pHeader = ^tHeader;
-
-const
-  cHeaderSize = SizeOf(tHeader);
-
-var
-  Header: tHeader = (Mark: 'AEF'; Version: 2; RAM: (Addr: $A000));
 
 type
   tTemplate = record
@@ -240,8 +216,8 @@ type
   end;
   pTemplate = ^tTemplate;
 
-  // Tile Format constants
 const
+  // Tile Format constants
   cTmplNum = 3;
   cTemplate: array[0 .. cTmplNum] of tTemplate = (
     (Name: '8bpp Linear';        BPP: 8;  tW:1;  tH:1),
@@ -299,8 +275,6 @@ var
 
 //procedure HexDump(Lines: tStrings; const Data: tData; Address: integer = 0; Bank: integer = 0);
 procedure HexDumpInClipBoard(const Data: tData);
-function StrToBRAM(const Str: string): integer;
-function BRAMToStr(Value: integer): string;
 
 procedure PrepareSpriteData(Spr: pSprite);
 procedure PrepareLayerData(Layer: pLayer);
@@ -348,25 +322,6 @@ begin
     inc(p);
   end;
   Clipboard.AsText := s;
-end;
-
-
-function StrToBRAM(const Str: string): integer;
-  var v: integer;
-begin
-  v := StrToInt('$' + Str);
-  if v < $A000 then Result := v
-               else Result := (v and $FFFF) + $2000 * ((v shr 16) and $FF);
-end;
-
-function BRAMToStr(Value: integer): string;
-  var v: integer;
-begin
-  if Value < $A000 then Result := IntToHex(Value, 4)
-  else begin
-    v := Value - $A000;
-    Result := IntToHex(v div $2000, 2) + IntToHex(v mod $2000 + $A000, 4)
-  end;
 end;
 
 

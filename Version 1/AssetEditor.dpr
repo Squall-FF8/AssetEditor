@@ -9,12 +9,11 @@ uses
   uPicture in 'uPicture.pas' {fmPicture},
   uPalette in 'uPalette.pas' {fmPalette},
   uMap in 'uMap.pas' {fmMap},
-  uTile0 in 'uTile0.pas' {fmTile0},
+  uTiles in 'uTiles.pas' {fmTiles},
   uRAW in 'uRAW.pas' {fmRAW},
   uImportOpt in 'uImportOpt.pas' {dlgImportOption},
   uText in 'uText.pas' {fmText},
-  uZSM in 'uZSM.pas' {fmZSM},
-  dlgRefactor in 'dlgRefactor.pas' {dlgRefactorOptions};
+  uZSM in 'uZSM.pas' {fmZSM};
 
 {$R *.res}
 
@@ -26,11 +25,10 @@ begin
   Application.CreateForm(TfmPicture, fmPicture);
   Application.CreateForm(TfmPalette, fmPalette);
   Application.CreateForm(TfmMap, fmMap);
-  Application.CreateForm(TfmTile0, fmTile0);
+  Application.CreateForm(TfmTiles, fmTiles);
   Application.CreateForm(TfmRAW, fmRAW);
   Application.CreateForm(TdlgImportOption, dlgImportOption);
   Application.CreateForm(TfmText, fmText);
   Application.CreateForm(TfmZSM, fmZSM);
-  Application.CreateForm(TdlgRefactorOptions, dlgRefactorOptions);
   Application.Run;
 end.

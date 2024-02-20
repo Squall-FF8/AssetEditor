@@ -1,4 +1,4 @@
-unit uTiles;
+unit uTile0;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   uCommon, uMain ;
 
 type
-  TfmTiles = class(TForm)
+  TfmTile0 = class(TForm)
     Label2: TLabel;
     Label13: TLabel;
     Label12: TLabel;
@@ -38,7 +38,7 @@ type
   end;
 
 var
-  fmTiles: TfmTiles;
+  fmTile0: TfmTile0;
 
 implementation
 {$R *.dfm}
@@ -46,7 +46,7 @@ implementation
 uses uPicture;
 
 
-procedure TfmTiles.Setup;
+procedure TfmTile0.Setup;
 begin
   BorderStyle := bsNone;
   Parent := fmMain.panEdits;
@@ -54,7 +54,7 @@ begin
 end;
 
 
-procedure TfmTiles.SetPointer(Ptr: pointer);
+procedure TfmTile0.SetPointer(Ptr: pointer);
 begin
   Tiles := Ptr;
 
@@ -71,7 +71,7 @@ begin
 end;
 
 
-procedure TfmTiles.ControlChange(Sender: TObject);
+procedure TfmTile0.ControlChange(Sender: TObject);
 begin
   case TComponent(Sender).Tag of
      1: begin
@@ -91,7 +91,7 @@ begin
 end;
 
 
-procedure TfmTiles.cbPicDropDown(Sender: TObject);
+procedure TfmTile0.cbPicDropDown(Sender: TObject);
   var i: integer;
       Asset: pAsset;
 begin
@@ -104,7 +104,7 @@ begin
 end;
 
 
-procedure TfmTiles.DrawImage;
+procedure TfmTile0.DrawImage;
 begin
   //if Map.Link = 0 then exit;
   //fmPicture.Pic := pointer(fmMain.lbList.Items.Objects[Spr.Link - 1]);

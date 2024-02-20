@@ -18,8 +18,11 @@ type
     dOpenPicture: TOpenPictureDialog;
     dSave: TSaveDialog;
     bSaveFile: TPNGButton;
+    eAddr: TEdit;
+    Label35: TLabel;
     bAddr: TPNGButton;
     bSaveAssets: TPNGButton;
+    bGenerateSource: TPNGButton;
     bLoadDoc: TPNGButton;
     bSaveDoc: TPNGButton;
     dOpen: TOpenDialog;
@@ -45,6 +48,8 @@ type
     bImpPicTile16: TPNGButton;
     bImpBackground: TPNGButton;
     bAddRaw: TPNGButton;
+    seBank: TSpinEdit;
+    Label1: TLabel;
     bImpPic2: TPNGButton;
     bImpSprite2: TPNGButton;
     bAddText: TPNGButton;
@@ -54,6 +59,7 @@ type
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
+    procedure bGenerateSourceClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bAddPicClick(Sender: TObject);
     procedure bAddPaletteClick(Sender: TObject);
@@ -98,8 +104,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uSprite, uPicture, uPalette, uLayer, uMap, uTile0, uRAW, uText, uZSM,
-  uImportOpt, dlgRefactor;
+  uSprite, uPicture, uPalette, uLayer, uMap, uTiles, uRAW, uText, uZSM,
+  uImportOpt;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -231,10 +237,44 @@ begin
     3: fmPalette.SetPointer(Asset);
     4: fmLayer.SetPointer(Asset);
     5: fmMap.SetPointer(Asset);
-    6: fmTile0.SetPointer(Asset);
+    6: fmTiles.SetPointer(Asset);
     7: fmRAW.SetPointer(Asset);
     8: fmText.SetPointer(Asset);
     9: fmZSM.SetPointer(Asset);
+  end;
+end;
+
+
+procedure TfmMain.bGenerateSourceClick(Sender: TObject);
+  const
+    cHeader: string =
+      'const'#13#10 +
+      '  cAssetAddress = $%s;'#13#10#13#10 +
+      'var'#13#10 +
+      '  AssetFile: array[] of char = ''Assets.bin'';'#13#10;
+    cBody: string =
+      #13#10 +
+      '  LoadFile(@AssetFile, AssetFile.Length, cAssetAddress);';
+    cCopyToVera: string =
+      #13#10 +
+      '  vSetAddressR($%.2x, $%.2x, $%.2x);'#13#10 +
+      '  CopyToVera($%.4x, %d);';
+
+  var i: integer;
+      Asset: pAsset;
+begin
+  Memo.Lines.Add(format(cHeader, [eAddr.Text]));
+  for i :=0 to lbList.Count - 1 do begin
+    Asset := pAsset(lbList.Items.Objects[i]);
+    Memo.Lines.Add( format('  %s: array[%d] of byte absolute $%.4x;',
+      [Asset.Name, Length(Asset.Data), Asset.Addr]) );
+  end;
+
+  Memo.Lines.Add(cBody);
+  for i :=0 to lbList.Count - 1 do begin
+    Asset := pAsset(lbList.Items.Objects[i]);
+    Memo.Lines.Add( format(cCopyToVera,
+      [Asset.vAddr shr 16, (Asset.vAddr shr 8) and $FF, Asset.vAddr and $FF, Asset.Addr, Length(Asset.Data)]) );
   end;
 end;
 
@@ -410,11 +450,7 @@ procedure TfmMain.bAddrClick(Sender: TObject);
   var i, p, a: integer;
       Asset: pAsset;
 begin
-  if not dlgRefactorOptions.Go then exit;
-  a := Header.RAM.Bank;
-  p := Header.RAM.Addr;
-  if a >= 0 then inc(p, a * $2000);
-
+  p := StrToInt('$' + eAddr.Text);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
     if (Asset.Flags and 1) = 0 then begin
@@ -464,8 +500,8 @@ begin
   if not dSave.Execute then exit;
 
   f := CreateFile(pchar(dSave.FileName), GENERIC_WRITE, FILE_SHARE_WRITE, nil, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-  Header.Count := lbList.Count;
-  WriteFile(f, Header, cHeaderSize, n, nil);
+  i := lbList.Count;
+  WriteFile(f, i, 4, n, nil);
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
     Asset._Len := Length(Asset.Data);
@@ -485,25 +521,16 @@ procedure TfmMain.bLoadDocClick(Sender: TObject);
       Pal: pPalette;
       Lay: pLayer;
       Map: pMap;
-      Tile0: pTile0;
+      Tiles: pTile;
       RAW: pAsset;
       Text: pText;
-      h: tHeader;
 begin
   if not dOpen.Execute then exit;
 
   EmptyDoc;
   lbList.Items.Clear;
   f := CreateFile(pchar(dOpen.FileName), GENERIC_READ, FILE_SHARE_READ, nil, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-  ReadFile(f, h, cHeaderSize, n, nil);
-  if h.Mark = 'AEF' then begin
-    m := h.Count;
-    Header := h;
-  end else begin  // revert to Version 1 (no header)
-    m := pInteger(@h.Mark)^;
-    SetFilePointer(f, 4, nil, FILE_BEGIN);
-  end;
-
+  ReadFile(f, m, 4, n, nil);
   for i := 0 to m - 1 do begin
     ReadFile(f, t, 1, n, nil);
     SetFilePointer(f, -1, nil, FILE_CURRENT);
@@ -549,12 +576,12 @@ begin
         lbList.AddItem(Map.Name, tObject(Map));
        end;
       atTile: begin
-        New(Tile0);
-        ReadFile(f, Tile0^, SizeOf(tTile0), n, nil);
-        pCardinal(@Tile0.Data)^ := 0;
-        SetLength(Tile0.Data, Tile0._Len);
-        ReadFile(f, Tile0.Data[0], Tile0._Len, n, nil);
-        lbList.AddItem(Tile0.Name, tObject(Tile0));
+        New(Tiles);
+        ReadFile(f, Tiles^, SizeOf(tTile), n, nil);
+        pCardinal(@Tiles.Data)^ := 0;
+        SetLength(Tiles.Data, Tiles._Len);
+        ReadFile(f, Tiles.Data[0], Tiles._Len, n, nil);
+        lbList.AddItem(Tiles.Name, tObject(Tiles));
        end;
       atRaw: begin
         New(RAW);
@@ -576,6 +603,11 @@ begin
   end;
   CloseHandle(f);
   Caption := 'Asset Editor - ' + dOpen.FileName;
+
+  m := pAsset(lbList.Items.Objects[0]).Addr;
+  eAddr.Text := IntToHex(m, 4);
+  if (m >=$A000) and (m < $C000) then seBank.Value := 0
+                                 else seBank.Value := -1;
 end;
 
 
@@ -692,7 +724,7 @@ begin
   fmPalette.Setup;
   fmLayer.Setup;
   fmMap.Setup;
-  fmTile0.Setup;
+  fmTiles.Setup;
   fmRAW.Setup;
   fmText.Setup;
   fmZSM.Setup;
@@ -762,7 +794,7 @@ procedure TfmMain.bImpBackgroundClick(Sender: TObject);
       bmp: tBitmap;
       Pic: pPicture;
       Map: pMap;
-      Tile: pTile0;
+      Tile: pTile;
       Pal: pPalette;
       tmp: array[0 .. 255] of cardinal;
 
@@ -888,11 +920,11 @@ begin
   n := Length(Asset.Data);
   p := 0;
   s := '';
-  Bank := Header.RAM.Bank;
+  Bank := seBank.Value;
 
   while p <> n do begin
     if (p and $0F) = 0 then
-       if Bank >=0 then s := s + format('%.2x %.4x: ', [(Asset.Addr + p - $A000) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
+       if Bank >=0 then s := s + format('%.2x %.4x: ', [Bank + (Asset.Addr + p - $A000) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
                    else s := s + IntToHex(Asset.Addr + p, 4) + ': ';
     s := s + ' ' + IntToHex(Asset.Data[p], 2);
     if (p and $0F) = $F then s := s + #13#10;
@@ -1011,7 +1043,7 @@ begin
 end;
 
 procedure TfmMain.bGenerateASMClick(Sender: TObject);
-  var i: integer;
+  var i, Bank: integer;
       Asset: pAsset;
 
   function FormatAddress(Addr: integer): string;
@@ -1020,11 +1052,12 @@ procedure TfmMain.bGenerateASMClick(Sender: TObject);
     if Addr < $A000 then Result := IntToHex(Addr, 4)
     else begin
       n := Addr - $A000;
-      Result := format('$%d%.4x', [n div 8192, $A000 + n mod 8192]);
+      Result := format('$%d%.4x', [Bank + n div 8192, $A000 + n mod 8192]);
     end;
   end;
 
 begin
+  Bank := seBank.Value;
   Memo.Clear;
   for i := 0 to lbList.Count - 1 do begin
     Asset := pAsset(lbList.Items.Objects[i]);
