@@ -51,6 +51,7 @@ type
     bGenerateASM: TPNGButton;
     bAddZSM: TPNGButton;
     TextBox: TMemo;
+    bImpTiles: TPNGButton;
     procedure bAddSpriteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbListClick(Sender: TObject);
@@ -82,6 +83,7 @@ type
     procedure bAddTextClick(Sender: TObject);
     procedure bGenerateASMClick(Sender: TObject);
     procedure bAddZSMClick(Sender: TObject);
+    procedure bImpTilesClick(Sender: TObject);
   private
     ColSrc: integer;
     procedure EmptyDoc;
@@ -98,8 +100,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uSprite, uPicture, uPalette, uLayer, uMap, uTile0, uRAW, uText, uZSM,
-  uImportOpt, dlgRefactor;
+  uSprite, uPicture, uPalette, uLayer, uMap, uTile0, uRAW, uText, uZSM, uTiles,
+  uImportOpt, dlgRefactor, dlgImportTiles;
 
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -226,15 +228,16 @@ begin
   TextBox.Visible  := (Asset.Flags and Flag_TextBox) > 0;
 
   case Asset.Kind of
-    1: fmSprite.SetPointer(Asset);
-    2: fmPicture.SetPointer(Asset);
-    3: fmPalette.SetPointer(Asset);
-    4: fmLayer.SetPointer(Asset);
-    5: fmMap.SetPointer(Asset);
-    6: fmTile0.SetPointer(Asset);
-    7: fmRAW.SetPointer(Asset);
-    8: fmText.SetPointer(Asset);
-    9: fmZSM.SetPointer(Asset);
+    atSprite:  fmSprite.SetPointer(Asset);
+    atPicture: fmPicture.SetPointer(Asset);
+    atPalette: fmPalette.SetPointer(Asset);
+    atLayer:   fmLayer.SetPointer(Asset);
+    atMap:     fmMap.SetPointer(Asset);
+    atTile0:   fmTile0.SetPointer(Asset);
+    atRaw:     fmRAW.SetPointer(Asset);
+    atText:    fmText.SetPointer(Asset);
+    atZSM:     fmZSM.SetPointer(Asset);
+    atTile:    fmTiles.SetPointer(Asset);
   end;
 end;
 
@@ -548,7 +551,7 @@ begin
         ReadFile(f, Map.Data[0], Map._Len, n, nil);
         lbList.AddItem(Map.Name, tObject(Map));
        end;
-      atTile: begin
+      atTile0: begin
         New(Tile0);
         ReadFile(f, Tile0^, SizeOf(tTile0), n, nil);
         pCardinal(@Tile0.Data)^ := 0;
@@ -696,6 +699,7 @@ begin
   fmRAW.Setup;
   fmText.Setup;
   fmZSM.Setup;
+  fmTiles.Setup;
 end;
 
 
@@ -800,7 +804,7 @@ begin
   New(Tile);
   FillChar(Tile^, Sizeof(Tile^), 0);
   Tile.Name := fn + '_Tiles';
-  Tile.Kind := atTile;
+  Tile.Kind := atTile0;
   SetLength(Tile.Data, (Pic.W * Pic.H) shr 1);
   lbList.AddItem(Tile.Name, tObject(Tile));
 
@@ -879,7 +883,7 @@ end;
 
 
 procedure TfmMain.HexDump(const Ptr);
-  var p, n, Bank: integer;
+  var p, n, addr: integer;
       Asset: pAsset;
       s: string;
 begin
@@ -888,12 +892,16 @@ begin
   n := Length(Asset.Data);
   p := 0;
   s := '';
-  Bank := Header.RAM.Bank;
 
   while p <> n do begin
-    if (p and $0F) = 0 then
-       if Bank >=0 then s := s + format('%.2x %.4x: ', [(Asset.Addr + p - $A000) shr 13, (Asset.Addr + p) mod 8192 + $A000] )
-                   else s := s + IntToHex(Asset.Addr + p, 4) + ': ';
+    if (p and $0F) = 0 then begin
+      addr := Asset.Addr + p;
+      if addr < $A000 then s := s + IntToHex(addr, 4) + ': '
+      else begin
+        dec(addr, $A000);
+        s := s + format('%.2x %.4x: ', [addr div $2000, addr mod $2000 + $A000] )
+      end;
+    end;
     s := s + ' ' + IntToHex(Asset.Data[p], 2);
     if (p and $0F) = $F then s := s + #13#10;
     inc(p);
@@ -1045,6 +1053,18 @@ begin
   SetLength(ZSM.Data, 0);
 
   lbList.AddItem(ZSM.Name, tObject(ZSM));
+end;
+
+procedure TfmMain.bImpTilesClick(Sender: TObject);
+begin
+  if not dOpenPicture.Execute then exit;
+  if ExtractFileExt(dOpenPicture.FileName) <> '.png' then exit; // for now PNG only!
+
+  LoadPNG(dOpenPicture.FileName);
+  if BadBPP then exit;
+  if not dlgImportTile.Go then exit;
+
+  ImportTiles;
 end;
 
 end.

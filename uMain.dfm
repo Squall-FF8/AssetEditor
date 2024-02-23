@@ -174,7 +174,7 @@ object fmMain: TfmMain
       OnClick = bImpSpriteClick
     end
     object bSaveFile: TPNGButton
-      Left = 747
+      Left = 795
       Top = 5
       Width = 35
       Height = 35
@@ -209,7 +209,7 @@ object fmMain: TfmMain
       OnClick = bSaveFileClick
     end
     object bAddr: TPNGButton
-      Left = 914
+      Left = 962
       Top = 12
       Width = 21
       Height = 21
@@ -234,7 +234,7 @@ object fmMain: TfmMain
       OnClick = bAddrClick
     end
     object bSaveAssets: TPNGButton
-      Left = 787
+      Left = 835
       Top = 5
       Width = 35
       Height = 35
@@ -391,7 +391,7 @@ object fmMain: TfmMain
       OnClick = bImpPicClick
     end
     object bDelAsset: TPNGButton
-      Left = 851
+      Left = 899
       Top = 5
       Width = 35
       Height = 35
@@ -693,7 +693,7 @@ object fmMain: TfmMain
       OnClick = bAddTextClick
     end
     object bGenerateASM: TPNGButton
-      Left = 952
+      Left = 1000
       Top = 9
       Width = 35
       Height = 35
@@ -740,6 +740,29 @@ object fmMain: TfmMain
       ParentShowHint = False
       ShowHint = True
       OnClick = bAddZSMClick
+    end
+    object bImpTiles: TPNGButton
+      Left = 731
+      Top = 5
+      Width = 35
+      Height = 35
+      Hint = 'Import Tiles from file'
+      ButtonLayout = pbsImageAbove
+      ImageNormal.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+        F40000000473424954080808087C086488000000097048597300000100000001
+        00014DD077270000001974455874536F667477617265007777772E696E6B7363
+        6170652E6F72679BEE3C1A000000BD4944415478DAEDD73D0A02410C05E0445B
+        3D8FA2967A8F6D2C3D837803C1D2C67B68A9A2E7715B777C81D9DE0421162F90
+        0D5B24F3B13F0CA322B2476E9003F93E5AEB29A59CEC46551B940372E498D159
+        8FE2F2762EDEC71D807905DC506681199D014AA0D1E209C0B4021E2893C81002
+        08208000020CF012DF26D2C7058055059C51968119AD011AE41A3974341A7A07
+        C0B50216285BE4D831C336C1A36248E4C9FD2CF20192FD0AE40F3EC2F4DF9000
+        0208208080F4C369EAF1FC036765C7C58592D4A90000000049454E44AE426082}
+      ButtonStyle = pbsNoFrame
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = bImpTilesClick
     end
   end
   object Panel2: TPanel

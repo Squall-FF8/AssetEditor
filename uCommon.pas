@@ -11,10 +11,11 @@ const
   atPalette = 3;
   atLayer   = 4;
   atMap     = 5;
-  atTile    = 6;
+  atTile0   = 6;
   atRaw     = 7;
   atText    = 8;
   atZSM     = 9;
+  atTile    = 10;
 
   // Picture Modes
   //pmLinear = 0;
@@ -200,11 +201,32 @@ type
   end;
   pZSM = ^tZSM;
 
+  tTile = record
+    Kind: byte;
+    Flags: byte;
+    _Len: integer;
+    Name: tAssetName;
+    Addr: integer;
+    vAddr: integer;
+    Data: tData;
+    Link: integer;
+    FixLen: integer;
+
+    W, H:    integer; // of individual tile
+    BPP:     byte;    // 0- liniear, 2/4/8 BPP
+    Num:     integer; // total number of tiles in the set
+    NumCols: integer; // number of tiles per row. For preview only!!!
+    Ind:     integer; // Pal Index
+  end;
+  pTile = ^tTile;
+
+
 
 const
-  cKindLen: array[1 .. 9] of integer = (
+  cKindLen: array[1 .. 10] of integer = (
     SizeOf(tSprite), SizeOf(TPicture), SizeOf(tPalette), SizeOf(tLayer),
-    SizeOf(tMap), SizeOf(tTile0), SizeOf(tAsset), SizeOf(tText), SizeOf(tZSM) );
+    SizeOf(tMap), SizeOf(tTile0), SizeOf(tAsset), SizeOf(tText), SizeOf(tZSM),
+    SizeOf(tTile) );
 
 
   // Header
@@ -278,6 +300,8 @@ var
   // globl var to simplify the imports
   fn: string;
   W, H, BPP: integer;
+  tW, tH, tBPP, tNum: integer;  // for tiles
+  ImpPal: boolean;
   Start, Delta: integer;
   List: tListBox;
   WinPal: tWinPalette;
@@ -327,6 +351,11 @@ procedure NewSprite;
 
 procedure ImportSprite;
 procedure ImportSprite2;
+procedure ImportTiles;
+
+procedure MakePal_Gray16;
+procedure MakePal_Gray256;
+procedure MakePal_Link(const Data:tData; Ind, Num: integer);
 
 
 implementation
@@ -670,5 +699,126 @@ begin
   Spr.Link := List.Count;
 end;
 
+
+procedure ImportTiles8bpp(Tile: pTile);
+  var addr, i, j, n, Xo, Yo: integer;
+      p: pByte;
+      b, c, b1, Mask1: byte;
+      Shift, Shift1: shortint;
+begin
+  SetLength(Tile.Data, tW * tH * Tile.Num * tBPP div 8);
+  addr := 0;
+  b := 0;
+  Shift := 8 - tBPP;
+
+  Shift1 := -1; // to force a read of byte
+  Mask1 := 1 shl BPP - 1;
+
+  Xo := 0;
+  Yo := 0;
+  n  := 0;
+
+  repeat
+    for i := 0 to tH - 1 do begin
+      p := pointer(Start + (Yo+i)* Delta + (Xo * BPP) div 8);
+      for j := 0 to tW - 1 do begin
+        if Shift1 < 0 then begin
+          b1:= p^;
+          inc(p);
+          Shift1 := 8-BPP;
+        end;
+        c := (b1 shr Shift1) and Mask1;
+        b := b + c shl Shift;
+        dec(Shift, tBPP);
+        if Shift < 0 then begin
+          Shift := 8 - tBPP;
+          Tile.Data[addr] := b;
+          inc(addr);
+          b := 0;
+        end;
+        dec(Shift1, BPP);
+      end;
+    end;
+    inc(Xo, tW);
+    if (Xo + tW) > W then begin
+      inc(Yo, tH);
+      Xo := 0;
+    end;
+    inc(n)
+  until n = tNum;
+end;
+
+
+procedure ImportTiles;
+  var Tile: pTile;
+begin
+  New(Tile);
+  FillChar(Tile^, Sizeof(Tile^), 0);
+  Tile.Name  := fn + '_Tiles';
+  Tile.Kind  := atTile;
+  Tile.W     := tW;
+  Tile.H     := tH;
+  Tile.BPP   := tBPP;
+  Tile.Num   := tNum;
+  Tile.NumCols := W div tW;
+  List.AddItem(Tile.Name, tObject(Tile));
+
+  //if BPP = 8 then
+  ImportTiles8bpp(Tile);
+
+  if ImpPal then begin
+    New(Pal);
+    FillChar(Pal^, Sizeof(Pal^), 0);
+    Pal.Name  := fn + '_Pal';
+    Pal.Kind  := atPalette;
+    Pal.vAddr := $1FA00;
+    Pal.Count := 1 shl tBPP;
+    SetLength(Pal.Data, 2 * Pal.Count);
+    GetPalette(Pal.Data);
+    List.AddItem(Pal.Name, tObject(Pal));
+    Tile.Link := List.Count;
+  end;
+end;
+
+
+procedure MakePal_Gray16;
+  var i, n: integer;
+begin
+  for i := 0 to 15 do begin
+    n := i*16+i;
+    WinPal[i].R := n;
+    WinPal[i].G := n;
+    WinPal[i].B := n;
+    WinPal[i].A := 255;
+  end;
+end;
+
+procedure MakePal_Gray256;
+  var i: integer;
+begin
+  for i := 0 to 15 do begin
+    WinPal[i].R := i;
+    WinPal[i].G := i;
+    WinPal[i].B := i;
+    WinPal[i].A := 255;
+  end;
+end;
+
+procedure MakePal_Link(const Data:tData; Ind, Num: integer);
+  var i, n: integer;
+      r, g, b: byte;
+begin
+  n := Ind shl 5;
+  for i := 0 to Num - 1 do begin
+    r := Data[2*i + n] and $0F;
+    g := Data[2*i + n] shr 4;
+    b := Data[2*i+1 + n] and $0F;
+
+    WinPal[i].R := r shl 4 + r;
+    WinPal[i].G := g shl 4 + g;
+    WinPal[i].B := b shl 4 + b;
+    WinPal[i].A := 255;
+  end;
+end;
 
 end.

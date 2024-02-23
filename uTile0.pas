@@ -66,7 +66,7 @@ begin
   eFixedLen.Text     := IntToHex(Tiles.FixLen, 4);
 
   fmMain.HexDump(Tiles);
-  fmMain.ShowPanel(atTile - 1);
+  fmMain.ShowPanel(atTile0 - 1);
   DrawImage;
 end;
 

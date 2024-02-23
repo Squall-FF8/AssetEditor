@@ -14,7 +14,9 @@ uses
   uImportOpt in 'uImportOpt.pas' {dlgImportOption},
   uText in 'uText.pas' {fmText},
   uZSM in 'uZSM.pas' {fmZSM},
-  dlgRefactor in 'dlgRefactor.pas' {dlgRefactorOptions};
+  dlgRefactor in 'dlgRefactor.pas' {dlgRefactorOptions},
+  uTiles in 'uTiles.pas' {fmTiles},
+  dlgImportTiles in 'dlgImportTiles.pas' {dlgImportTile};
 
 {$R *.res}
 
@@ -32,5 +34,7 @@ begin
   Application.CreateForm(TfmText, fmText);
   Application.CreateForm(TfmZSM, fmZSM);
   Application.CreateForm(TdlgRefactorOptions, dlgRefactorOptions);
+  Application.CreateForm(TfmTiles, fmTiles);
+  Application.CreateForm(TdlgImportTile, dlgImportTile);
   Application.Run;
 end.
