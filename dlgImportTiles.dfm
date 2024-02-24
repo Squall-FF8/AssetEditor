@@ -2,7 +2,7 @@ object dlgImportTile: TdlgImportTile
   Left = 644
   Top = 124
   Width = 359
-  Height = 507
+  Height = 544
   BorderStyle = bsSizeToolWin
   Caption = 'Please select:'
   Color = clBtnFace
@@ -13,11 +13,12 @@ object dlgImportTile: TdlgImportTile
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 0
-    Top = 425
+    Top = 462
     Width = 343
     Height = 2
     Align = alBottom
@@ -25,14 +26,14 @@ object dlgImportTile: TdlgImportTile
   end
   object Label1: TLabel
     Left = 24
-    Top = 211
+    Top = 243
     Width = 51
     Height = 13
     Caption = 'Tile Width:'
   end
   object Label7: TLabel
     Left = 184
-    Top = 211
+    Top = 243
     Width = 38
     Height = 13
     Caption = 'in pixels'
@@ -45,14 +46,14 @@ object dlgImportTile: TdlgImportTile
   end
   object Label2: TLabel
     Left = 24
-    Top = 243
+    Top = 275
     Width = 54
     Height = 13
     Caption = 'Tile Height:'
   end
   object Label3: TLabel
     Left = 184
-    Top = 243
+    Top = 275
     Width = 38
     Height = 13
     Caption = 'in pixels'
@@ -65,14 +66,14 @@ object dlgImportTile: TdlgImportTile
   end
   object Label4: TLabel
     Left = 24
-    Top = 307
+    Top = 339
     Width = 73
     Height = 13
     Caption = 'Tiles to Import:'
   end
   object lNum: TLabel
     Left = 184
-    Top = 307
+    Top = 339
     Width = 36
     Height = 13
     Caption = 'number'
@@ -95,21 +96,21 @@ object dlgImportTile: TdlgImportTile
   end
   object Label6: TLabel
     Left = 24
-    Top = 275
+    Top = 307
     Width = 41
     Height = 13
     Caption = 'Tile BPP:'
   end
   object Label5: TLabel
     Left = 24
-    Top = 379
+    Top = 411
     Width = 70
     Height = 13
     Caption = 'Bytes per tile: '
   end
   object lBytesPerTile: TLabel
     Left = 112
-    Top = 379
+    Top = 411
     Width = 12
     Height = 13
     Caption = '...'
@@ -122,14 +123,14 @@ object dlgImportTile: TdlgImportTile
   end
   object Label8: TLabel
     Left = 24
-    Top = 395
+    Top = 427
     Width = 64
     Height = 13
     Caption = 'Total bytes : '
   end
   object lTotalBytes: TLabel
     Left = 112
-    Top = 395
+    Top = 427
     Width = 12
     Height = 13
     Caption = '...'
@@ -140,9 +141,16 @@ object dlgImportTile: TdlgImportTile
     Font.Style = []
     ParentFont = False
   end
+  object Label9: TLabel
+    Left = 24
+    Top = 211
+    Width = 40
+    Height = 13
+    Caption = 'Presets:'
+  end
   object Panel1: TPanel
     Left = 0
-    Top = 427
+    Top = 464
     Width = 343
     Height = 41
     Align = alBottom
@@ -173,7 +181,7 @@ object dlgImportTile: TdlgImportTile
   object seTileW: TSpinEdit
     Tag = 1
     Left = 112
-    Top = 208
+    Top = 240
     Width = 57
     Height = 22
     Hint = 'This value has meaning only before loading data!'
@@ -189,7 +197,7 @@ object dlgImportTile: TdlgImportTile
   object seTileH: TSpinEdit
     Tag = 2
     Left = 112
-    Top = 240
+    Top = 272
     Width = 57
     Height = 22
     Hint = 'This value has meaning only before loading data!'
@@ -205,7 +213,7 @@ object dlgImportTile: TdlgImportTile
   object seTileNum: TSpinEdit
     Tag = 4
     Left = 112
-    Top = 304
+    Top = 336
     Width = 57
     Height = 22
     Hint = 'This value has meaning only before loading data!'
@@ -221,7 +229,7 @@ object dlgImportTile: TdlgImportTile
   object cbImpPal: TCheckBox
     Tag = 5
     Left = 24
-    Top = 344
+    Top = 376
     Width = 201
     Height = 17
     Caption = 'Import the palette?'
@@ -232,7 +240,7 @@ object dlgImportTile: TdlgImportTile
   object cbTileBPP: TComboBox
     Tag = 3
     Left = 112
-    Top = 272
+    Top = 304
     Width = 73
     Height = 21
     Style = csDropDownList
@@ -243,5 +251,16 @@ object dlgImportTile: TdlgImportTile
       '2 BPP'
       '4 BPP'
       '8 BPP')
+  end
+  object cbPreset: TComboBox
+    Tag = 3
+    Left = 112
+    Top = 208
+    Width = 153
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 6
+    OnChange = cbPresetChange
   end
 end

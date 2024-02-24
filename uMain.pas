@@ -483,14 +483,17 @@ end;
 procedure TfmMain.bLoadDocClick(Sender: TObject);
   var f, i, n, m: cardinal;
       t: byte;
-      Spr: pSprite;
-      Pic: pPicture;
-      Pal: pPalette;
-      Lay: pLayer;
-      Map: pMap;
+      Spr:   pSprite;
+      Pic:   pPicture;
+      Pal:   pPalette;
+      Lay:   pLayer;
+      Map:   pMap;
       Tile0: pTile0;
-      RAW: pAsset;
-      Text: pText;
+      RAW:   pAsset;
+      Text:  pText;
+      ZSM:   pZSM;
+      Tile:  pTile;
+      Asset: pAsset;
       h: tHeader;
 begin
   if not dOpen.Execute then exit;
@@ -513,69 +516,50 @@ begin
     case t of
       atSprite: begin
         New(Spr);
-        ReadFile(f, Spr^, SizeOf(tSprite), n, nil);
-        pCardinal(@Spr.Data)^ := 0;
-        SetLength(Spr.Data, Spr._Len);
-        ReadFile(f, Spr.Data[0], Spr._Len, n, nil);
-        lbList.AddItem(Spr.Name, tObject(Spr));
+        Asset := pointer(Spr);
        end;
       atPicture: begin
         New(Pic);
-        ReadFile(f, Pic^, SizeOf(tPicture), n, nil);
-        pCardinal(@Pic.Data)^ := 0;
-        SetLength(Pic.Data, Pic._Len);
-        ReadFile(f, Pic.Data[0], Pic._Len, n, nil);
-        lbList.AddItem(Pic.Name, tObject(Pic));
+        Asset := pointer(Pic);
        end;
       atPalette: begin
         New(Pal);
-        ReadFile(f, Pal^, SizeOf(tPalette), n, nil);
-        pCardinal(@Pal.Data)^ := 0;
-        SetLength(Pal.Data, Pal._Len);
-        ReadFile(f, Pal.Data[0], Pal._Len, n, nil);
-        lbList.AddItem(Pal.Name, tObject(Pal));
+        Asset := pointer(Pal);
        end;
       atLayer: begin
         New(Lay);
-        ReadFile(f, Lay^, SizeOf(tLayer), n, nil);
-        pCardinal(@Lay.Data)^ := 0;
-        SetLength(Lay.Data, Lay._Len);
-        ReadFile(f, Lay.Data[0], Lay._Len, n, nil);
-        lbList.AddItem(Lay.Name, tObject(Lay));
+        Asset := pointer(Lay);
        end;
       atMap: begin
         New(Map);
-        ReadFile(f, Map^, SizeOf(tMap), n, nil);
-        pCardinal(@Map.Data)^ := 0;
-        SetLength(Map.Data, Map._Len);
-        ReadFile(f, Map.Data[0], Map._Len, n, nil);
-        lbList.AddItem(Map.Name, tObject(Map));
+        Asset := pointer(Map);
        end;
       atTile0: begin
         New(Tile0);
-        ReadFile(f, Tile0^, SizeOf(tTile0), n, nil);
-        pCardinal(@Tile0.Data)^ := 0;
-        SetLength(Tile0.Data, Tile0._Len);
-        ReadFile(f, Tile0.Data[0], Tile0._Len, n, nil);
-        lbList.AddItem(Tile0.Name, tObject(Tile0));
+        Asset := pointer(Tile0);
        end;
       atRaw: begin
         New(RAW);
-        ReadFile(f, RAW^, SizeOf(tAsset), n, nil);
-        pCardinal(@RAW.Data)^ := 0;
-        SetLength(RAW.Data, RAW._Len);
-        ReadFile(f, RAW.Data[0], RAW._Len, n, nil);
-        lbList.AddItem(RAW.Name, tObject(RAW));
+        Asset := pointer(RAW);
        end;
       atText: begin
         New(Text);
-        ReadFile(f, Text^, SizeOf(tText), n, nil);
-        pCardinal(@Text.Data)^ := 0;
-        SetLength(Text.Data, Text._Len);
-        ReadFile(f, Text.Data[0], Text._Len, n, nil);
-        lbList.AddItem(Text.Name, tObject(Text));
+        Asset := pointer(Text);
+       end;
+      atZSM: begin
+        New(ZSM);
+        Asset := pointer(ZSM);
+       end;
+      atTile: begin
+        New(Tile);
+        Asset := pointer(Tile);
        end;
     end;
+    ReadFile(f, Asset^, cKindLen[t], n, nil);
+    pCardinal(@Asset.Data)^ := 0;
+    SetLength(Asset.Data, Asset._Len);
+    ReadFile(f, Asset.Data[0], Asset._Len, n, nil);
+    lbList.AddItem(Asset.Name, tObject(Asset));
   end;
   CloseHandle(f);
   Caption := 'Asset Editor - ' + dOpen.FileName;
