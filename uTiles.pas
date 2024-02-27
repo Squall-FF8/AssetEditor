@@ -108,7 +108,7 @@ begin
         Tiles.Name := eName.Text;
         fmMain.lbList.Items[fmMain.lbList.ItemIndex] := Tiles.Name;
       end;
-     2: Tiles.Addr  := StrToInt('$' + eAddress.Text);
+     2: Tiles.Addr  := StrToBRAM(eAddress.Text);
      8: Tiles.vAddr := StrToInt('$' + eVidAddr.Text);
     10: begin
         Tiles.NumCols := seNumCols.Value;
