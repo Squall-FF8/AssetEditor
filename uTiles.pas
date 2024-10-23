@@ -92,6 +92,7 @@ begin
   seNumCols.MaxValue := Tiles.Num;
   seNumCols.Value    := Tiles.NumCols;
 
+  sePal.Value        := Tiles.Ind;
   if Tiles.Link <= 0 then cbPal.Text := ''
                      else cbPal.Text := pAsset(fmMain.lbList.Items.Objects[Tiles.Link - 1])^.Name;
 
